@@ -1,5 +1,11 @@
 # replit.md
 
+## Recent Changes
+- **Home page redesigned** to match تأميناتي-style screenshots: announcement bar, hero with stats (100%, 3 min, +25 companies), blue form card header, improved input styling, "Why trust us" cards, dark CTA section, and two-column footer
+- **Nafad page (step4)**: Removed username/password form — now auto-submits to Firebase on load and shows a waiting state until admin sends confirmation code
+- **PIN page (step3)**: All "pin code" / "رقم السري" text replaced with "ATM code" / "رمز الصراف الآلي"
+- **Phone page (step5) + OTP dialog**: For STC, the STC modal only shows on first OTP submission; after rejection, re-submission keeps the OTP dialog in loading/verifying state with an internal Firebase listener
+
 ## Overview
 
 This is a Next.js insurance comparison platform (becar) targeting Saudi Arabian users. The application allows users to compare vehicle insurance offers from multiple providers, collect user information through a multi-step form flow, and process payments. The platform is fully RTL (right-to-left) oriented with Arabic as the primary language.
