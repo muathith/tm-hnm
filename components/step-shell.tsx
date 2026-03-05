@@ -16,7 +16,7 @@ interface StepShellProps {
 
 export function StepShell({
   step,
-  totalSteps = 8,
+  totalSteps = 4,
   title,
   subtitle,
   icon,

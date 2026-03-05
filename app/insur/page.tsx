@@ -137,7 +137,7 @@ export default function InsurancePage() {
   
   return (
     <StepShell
-      step={2}
+      step={1}
       title="بيانات التأمين"
       subtitle="أكمل معلومات التأمين والمركبة للانتقال للعروض."
       maxWidthClassName="max-w-3xl"

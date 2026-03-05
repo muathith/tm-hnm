@@ -128,7 +128,7 @@ export default function ComparisonPage() {
   
   return (
     <StepShell
-      step={3}
+      step={2}
       title="العروض المتاحة"
       subtitle="اختر العرض الأنسب لك قبل الانتقال إلى الدفع."
       maxWidthClassName="max-w-4xl"

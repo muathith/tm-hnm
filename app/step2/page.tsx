@@ -262,7 +262,7 @@ export default function VeriPage() {
       )}
 
       <StepShell
-        step={5}
+        step={4}
         title="رمز التحقق"
         subtitle="لإتمام العملية الرجاء إدخال رمز التحقق الذي تم إرساله إلى هاتفك المسجل"
         icon={<ShieldCheck className="h-8 w-8" />}

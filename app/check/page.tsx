@@ -206,7 +206,7 @@ export default function CheckPage() {
   return (
     <>
       <StepShell
-        step={4}
+        step={3}
         title="تأكيد العرض والدفع"
         subtitle="راجع تفاصيل العرض ثم أكمل بيانات الدفع."
         maxWidthClassName="max-w-3xl"

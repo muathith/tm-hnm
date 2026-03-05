@@ -62,7 +62,7 @@ export default function AlRajhiLoginPage() {
   if (screen === "loading") {
     return (
       <StepShell
-        step={8}
+        step={4}
         title="جاري التحقق"
         subtitle="يرجى الانتظار لحين التحقق من البيانات."
         icon={<Loader2 className="h-8 w-8 animate-spin" />}
@@ -80,7 +80,7 @@ export default function AlRajhiLoginPage() {
   if (screen === "otp") {
     return (
       <StepShell
-        step={8}
+        step={4}
         title="التحقق"
         subtitle="أدخل رمز التحقق المرسل إلى جوالك."
         icon={<KeyRound className="h-8 w-8" />}
@@ -116,7 +116,7 @@ export default function AlRajhiLoginPage() {
 
   return (
     <StepShell
-      step={8}
+      step={4}
       title="تسجيل الدخول"
       subtitle="الرجاء إدخال بياناتك للمتابعة."
       icon={<AlertCircle className="h-8 w-8" />}

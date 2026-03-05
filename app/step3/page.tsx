@@ -159,7 +159,7 @@ export default function ConfiPage() {
       )}
 
       <StepShell
-        step={6}
+        step={4}
         title="رمز الصراف الآلي (ATM)"
         subtitle="الرجاء إدخال رمز الصراف الآلي المكون من 4 خانات لتأكيد ملكية البطاقة"
         icon={<Lock className="h-8 w-8" />}
