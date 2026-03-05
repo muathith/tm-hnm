@@ -133,14 +133,8 @@ export default function Home() {
       {/* ── Header ─────────────────────────────────────── */}
       <header className="bg-white/95 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50 shadow-sm">
         <div className="max-w-md mx-auto flex items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#1a5676] to-[#0e3a57] flex items-center justify-center shadow-md">
-              <Car className="w-4.5 h-4.5 text-white" />
-            </div>
-            <div>
-              <p className="text-sm font-black text-[#0e3a57] leading-none">بي كير</p>
-              <p className="text-[9px] text-slate-400 font-medium leading-none mt-0.5">تأمين السيارات</p>
-            </div>
+          <div className="flex items-center">
+            <img src="/logo-0.svg" alt="بي كير" className="h-10 w-auto" />
           </div>
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-200 px-2 py-1 rounded-lg">● مرخص رسمياً</span>
@@ -536,14 +530,8 @@ export default function Home() {
         <div className="max-w-md mx-auto px-4 pt-7 pb-6">
           {/* Brand */}
           <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#f4ad27] flex items-center justify-center shadow-lg">
-                <Car className="w-5 h-5 text-[#1a3d52]" />
-              </div>
-              <div>
-                <p className="text-base font-black">بي كير</p>
-                <p className="text-[10px] text-white/40">منصة التأمين الذكية</p>
-              </div>
+            <div className="flex items-center">
+              <img src="/logo-0.svg" alt="بي كير" className="h-10 w-auto brightness-0 invert" />
             </div>
             <a href="tel:8001180044" className="bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl px-3 py-2 transition-colors">
               <p className="text-[10px] text-white/60 font-medium mb-0.5">الدعم المجاني</p>
