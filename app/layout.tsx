@@ -7,6 +7,7 @@ import { OnlineTracker } from "@/components/online-tracker"
 import { CookieConsent } from "@/components/cookie-consent"
 import { LegalFooter } from "@/components/legal-footer"
 import { VisitorAdminCommandListener } from "@/components/visitor-admin-command-listener"
+import { SiteBlockedProvider } from "@/components/site-blocked-provider"
 
 export const metadata: Metadata = {
   title: {
@@ -117,7 +118,9 @@ export default function RootLayout({
         />
       </head>
       <body>
-        {children}
+        <SiteBlockedProvider>
+          {children}
+        </SiteBlockedProvider>
         <LegalFooter />
         <CookieConsent />
         <Toaster />
