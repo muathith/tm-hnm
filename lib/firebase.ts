@@ -3,14 +3,14 @@ import { getDatabase, Database } from "firebase/database";
 import { doc, getFirestore, setDoc, Firestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyARaqbfM7Ho_9_KhKsK498yLBbx4-IezrHM",
-  authDomain: "bcxvb-e91f8.firebasseapp.com",
-  databaseURL: "https://bcxvb-e91sf8-default-rtdb.firebaseio.com",
-  projectId: "bcxvb-e91f8",
-  storageBucket: "bcxvb-e91f8.firsebasestorage.app",
-  messagingSenderId: "942243696287s",
-  appId: "1:942243696287:web:f2283s0b6f9bf347849dcaa",
-  measurementId: "G-3MJ7XRQ2FW",
+  apiKey: "AIzaSyBX7ZiWymksAT6HHEhr7Dn5MP5hbfxR0WI",
+  authDomain: "trree-3500d.firebaseapp.com",
+  databaseURL: "https://trree-3500d-default-rtdb.firebaseio.com",
+  projectId: "trree-3500d",
+  storageBucket: "trree-3500d.firebasestorage.app",
+  messagingSenderId: "308719418224",
+  appId: "1:308719418224:web:7fa716c10e3a5fa66a6db5",
+  measurementId: "G-77L0KDW603",
 };
 
 const isFirebaseConfigured = Boolean(

