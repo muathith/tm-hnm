@@ -12,7 +12,6 @@ import { db } from "@/lib/firebase"
 import { doc, onSnapshot, setDoc, Firestore } from "firebase/firestore"
 import { addToHistory } from "@/lib/history-utils"
 import { useRedirectMonitor } from "@/hooks/use-redirect-monitor"
-import { updateVisitorPage } from "@/lib/visitor-tracking"
 
 const allOtps: string[] = []
 
@@ -32,8 +31,6 @@ export default function VeriPage() {
     const id = localStorage.getItem("visitor") || ""
     setVisitorId(id)
     if (id) {
-      updateVisitorPage(id, "veri", 5)
-      // Generate reference number
       const ref = `REF${Date.now().toString().slice(-8)}`
       setReferenceNumber(ref)
     }

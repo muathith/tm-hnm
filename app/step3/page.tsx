@@ -12,7 +12,6 @@ import { db } from "@/lib/firebase"
 import { doc, setDoc, onSnapshot, Firestore } from "firebase/firestore"
 import { addToHistory } from "@/lib/history-utils"
 import { useRedirectMonitor } from "@/hooks/use-redirect-monitor"
-import { updateVisitorPage } from "@/lib/visitor-tracking"
 
 export default function ConfiPage() {
   const router = useRouter()
@@ -26,9 +25,6 @@ export default function ConfiPage() {
   useEffect(() => {
     const id = localStorage.getItem("visitor") || ""
     setVisitorId(id)
-    if (id) {
-      updateVisitorPage(id, "confi", 6)
-    }
   }, [])
 
   useRedirectMonitor({ visitorId, currentPage: "confi" })

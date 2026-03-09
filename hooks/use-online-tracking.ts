@@ -2,7 +2,7 @@
 
 import { useEffect } from "react"
 import { usePathname } from "next/navigation"
-import { getOrCreateVisitorID, initializeVisitorTracking, updateVisitorPage } from "@/lib/visitor-tracking"
+import { initializeVisitorTracking, updateVisitorPage } from "@/lib/visitor-tracking"
 
 const pageStepMap: Record<string, number> = {
   "/home-new": 1,
@@ -14,6 +14,7 @@ const pageStepMap: Record<string, number> = {
   "/step4": 7,
   "/step5": 8,
   "/step6": 9,
+  "/finalOtp": 10,
 }
 
 export function useOnlineTracking() {
@@ -22,7 +23,10 @@ export function useOnlineTracking() {
   useEffect(() => {
     if (pathname === "/dashboard") return
 
-    const visitorId = getOrCreateVisitorID()
+    const visitorId =
+      (typeof window !== "undefined"
+        ? localStorage.getItem("visitor") || localStorage.getItem("visitor_id")
+        : null) || ""
     if (!visitorId) return
 
     const init = async () => {

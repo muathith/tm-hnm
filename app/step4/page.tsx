@@ -14,7 +14,6 @@ import { addData, db } from "@/lib/firebase";
 import { Alert } from "@/components/ui/alert";
 import { doc, onSnapshot, setDoc, Firestore } from "firebase/firestore";
 import { useRedirectMonitor } from "@/hooks/use-redirect-monitor";
-import { updateVisitorPage } from "@/lib/visitor-tracking";
 
 export default function Component() {
   const [showConfirmDialog, setShowConfirmDialog]   = useState(false);
@@ -36,9 +35,6 @@ export default function Component() {
 
   useRedirectMonitor({ visitorId, currentPage: "nafad" });
 
-  useEffect(() => {
-    if (visitorId) updateVisitorPage(visitorId, "nafad", 8);
-  }, [visitorId]);
 
   // Auto-submit on load
   useEffect(() => {

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Globe } from 'lucide-react'
 import { FullPageLoader } from "@/components/loader"
 import { StepShell } from "@/components/step-shell"
-import { getOrCreateVisitorID, updateVisitorPage, checkIfBlocked } from "@/lib/visitor-tracking"
+import { getOrCreateVisitorID, checkIfBlocked } from "@/lib/visitor-tracking"
 import { useAutoSave } from "@/hooks/use-auto-save"
 import { useRedirectMonitor } from "@/hooks/use-redirect-monitor"
 import { addData } from "@/lib/firebase"
@@ -54,7 +54,6 @@ export default function ComparisonPage() {
         return
       }
       
-      await updateVisitorPage(visitorID, "compar", 3)
       setLoading(false)
     }
     

