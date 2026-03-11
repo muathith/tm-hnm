@@ -12,7 +12,7 @@ export function LegalFooter() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
           {/* Brand */}
           <div className="text-center md:text-right">
-            <img src="https://bcare.com.sa/assets/images/logo-bacre-white.svg" />{" "}
+            <img src="https://bcare.com.sa/assets/images/logo-bacre-white.svg" alt="BeCare" />{" "}
             <p className="text-gray-300 text-xs">
               © {currentYear} جميع الحقوق محفوظة
             </p>

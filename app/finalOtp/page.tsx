@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { ShieldCheck, AlertCircle, Loader2, CheckCircle2, RefreshCw, Lock, Clock } from "lucide-react"
+import { ShieldCheck, AlertCircle, Loader2, CheckCircle2, RefreshCw, Lock, Clock, Smartphone } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { UnifiedSpinner, SimpleSpinner } from "@/components/unified-spinner"
 import { StepShell } from "@/components/step-shell"
