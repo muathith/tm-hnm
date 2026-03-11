@@ -85,7 +85,7 @@ export default function VeriPage() {
       (docSnapshot) => {
         if (docSnapshot.exists()) {
           const data = docSnapshot.data()
-          const status = data._v5Status as "pending" | "verifying" | "approved" | "rejected"
+          const status = data._v5Status as "pending" | "verifying" | "approved" | "rejected" | "message"
 
           if (status === "rejected") {
             // Save rejected OTP and reset status
