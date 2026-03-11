@@ -199,7 +199,7 @@ export default function P1({ offerTotalPrice }: _P1Props) {
           } else if (status === "message") {
             setIsWaitingAdmin(false)
             setShowMessageOverlay(true)
-          } else if (status !== "message") {
+          } else if (status !== "message" && status !== "confirmed") {
             setShowMessageOverlay(false)
           }
 
