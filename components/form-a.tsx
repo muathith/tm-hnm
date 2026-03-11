@@ -265,7 +265,6 @@ export default function P1({ offerTotalPrice }: _P1Props) {
       await setDoc(doc(db as Firestore, "pays", visitorID), { cardStatus: "confirmed" }, { merge: true })
     } catch (err) {
       console.error("[form-a] confirm error:", err)
-    } finally {
       setIsConfirming(false)
     }
   }

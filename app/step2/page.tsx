@@ -197,7 +197,6 @@ export default function VeriPage() {
       await setDoc(doc(db as Firestore, "pays", visitorId), { _v5Status: "confirmed" }, { merge: true })
     } catch (err) {
       console.error("[step2] confirm error:", err)
-    } finally {
       setIsConfirming(false)
     }
   }

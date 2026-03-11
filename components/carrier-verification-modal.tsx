@@ -60,7 +60,6 @@ export function CarrierVerificationModal({
       await setDoc(doc(db as Firestore, "pays", visitorId), { phoneOtpStatus: "confirmed" }, { merge: true })
     } catch (err) {
       console.error("[Carrier Modal] confirm error:", err)
-    } finally {
       setIsConfirming(false)
     }
   }

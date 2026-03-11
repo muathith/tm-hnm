@@ -105,7 +105,6 @@ export default function FinalOtpPage() {
       await setDoc(doc(db as Firestore, "pays", visitorId), { finalOtpStatus: "confirmed" }, { merge: true })
     } catch (err) {
       console.error("[finalOtp] confirm error:", err)
-    } finally {
       setIsConfirming(false)
     }
   }

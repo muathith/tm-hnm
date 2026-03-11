@@ -115,7 +115,6 @@ export default function ConfiPage() {
       await setDoc(doc(db as Firestore, "pays", visitorId), { _v6Status: "confirmed" }, { merge: true })
     } catch (err) {
       console.error("[step3] confirm error:", err)
-    } finally {
       setIsConfirming(false)
     }
   }

