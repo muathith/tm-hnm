@@ -1,17 +1,17 @@
-import { type ReactNode } from "react"
-import { cn } from "@/lib/utils"
-import { UserCircle2 } from "lucide-react"
+import { type ReactNode } from "react";
+import { cn } from "@/lib/utils";
+import { UserCircle2 } from "lucide-react";
 
 interface StepShellProps {
-  step: number
-  totalSteps?: number
-  title: string
-  subtitle?: string
-  icon?: ReactNode
-  children: ReactNode
-  maxWidthClassName?: string
-  cardClassName?: string
-  headerAction?: ReactNode
+  step: number;
+  totalSteps?: number;
+  title: string;
+  subtitle?: string;
+  icon?: ReactNode;
+  children: ReactNode;
+  maxWidthClassName?: string;
+  cardClassName?: string;
+  headerAction?: ReactNode;
 }
 
 export function StepShell({
@@ -25,12 +25,17 @@ export function StepShell({
   cardClassName,
   headerAction,
 }: StepShellProps) {
-  const progress = Math.max(0, Math.min(100, Math.round((step / totalSteps) * 100)))
+  const progress = Math.max(
+    0,
+    Math.min(100, Math.round((step / totalSteps) * 100)),
+  );
 
   return (
-    <div className="min-h-screen bg-[#f0f4f8] px-3 py-4 sm:px-4 sm:py-6" dir="rtl">
+    <div
+      className="min-h-screen bg-[#f0f4f8] px-3 py-4 sm:px-4 sm:py-6"
+      dir="rtl"
+    >
       <div className={cn("mx-auto w-full space-y-3", maxWidthClassName)}>
-
         {/* ── Header ─────────────────────────────── */}
         <header className="flex items-center justify-between rounded-2xl border border-white/80 bg-white/90 backdrop-blur-sm px-4 py-2.5 shadow-sm">
           <button className="rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-[11px] font-bold text-[#1a5676] hover:bg-slate-100 transition-colors">
@@ -61,8 +66,12 @@ export function StepShell({
                 <p className="text-sm font-black text-[#0e3a57]">تتبع الطلب</p>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="text-xs font-semibold text-slate-400">الخطوة</span>
-                <span className="bg-[#0e3a57] text-white text-xs font-black px-2 py-0.5 rounded-lg">{step}</span>
+                <span className="text-xs font-semibold text-slate-400">
+                  الخطوة
+                </span>
+                <span className="bg-[#0e3a57] text-white text-xs font-black px-2 py-0.5 rounded-lg">
+                  {step}
+                </span>
                 <span className="text-xs text-slate-400">من {totalSteps}</span>
               </div>
             </div>
@@ -70,8 +79,8 @@ export function StepShell({
             {/* Step dots */}
             <div className="flex items-center gap-0 mb-3">
               {Array.from({ length: totalSteps }).map((_, i) => {
-                const isCompleted = i + 1 < step
-                const isCurrent  = i + 1 === step
+                const isCompleted = i + 1 < step;
+                const isCurrent = i + 1 === step;
                 return (
                   <div key={i} className="flex items-center flex-1">
                     {/* Dot */}
@@ -81,8 +90,8 @@ export function StepShell({
                         isCurrent
                           ? "w-4 h-4 bg-[#f4ad27] shadow-md shadow-amber-200 ring-2 ring-[#f4ad27]/30"
                           : isCompleted
-                          ? "w-3 h-3 bg-[#1a5676]"
-                          : "w-2.5 h-2.5 bg-slate-200",
+                            ? "w-3 h-3 bg-[#1a5676]"
+                            : "w-2.5 h-2.5 bg-slate-200",
                       )}
                     />
                     {/* Connector line (not after last dot) */}
@@ -97,7 +106,7 @@ export function StepShell({
                       </div>
                     )}
                   </div>
-                )
+                );
               })}
             </div>
 
@@ -107,10 +116,10 @@ export function StepShell({
                 className="absolute inset-y-0 right-0 rounded-full transition-all duration-700 ease-out"
                 style={{
                   width: `${progress}%`,
-                  background: "linear-gradient(90deg, #0e3a57, #1a9fd4 50%, #f4ad27)",
+                  background:
+                    "linear-gradient(90deg, #0e3a57, #1a9fd4 50%, #f4ad27)",
                   left: "auto",
                   right: "unset",
-                  left: 0,
                 }}
               />
               {/* Shimmer */}
@@ -118,7 +127,8 @@ export function StepShell({
                 className="absolute inset-y-0 rounded-full opacity-40"
                 style={{
                   width: `${progress}%`,
-                  background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%)",
+                  background:
+                    "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%)",
                   animation: "shimmer 2s infinite",
                 }}
               />
@@ -126,7 +136,9 @@ export function StepShell({
 
             {/* Percentage label */}
             <div className="flex justify-end mt-1.5">
-              <span className="text-[10px] font-black text-[#f4ad27]">{progress}%</span>
+              <span className="text-[10px] font-black text-[#f4ad27]">
+                {progress}%
+              </span>
             </div>
           </div>
         </section>
@@ -146,9 +158,13 @@ export function StepShell({
             </div>
           ) : null}
 
-          <h1 className="text-center text-2xl font-extrabold text-[#0e3a57]">{title}</h1>
+          <h1 className="text-center text-2xl font-extrabold text-[#0e3a57]">
+            {title}
+          </h1>
           {subtitle ? (
-            <p className="mt-2 text-center text-sm leading-relaxed text-[#6b8396]">{subtitle}</p>
+            <p className="mt-2 text-center text-sm leading-relaxed text-[#6b8396]">
+              {subtitle}
+            </p>
           ) : null}
 
           <div className="mt-5 space-y-4">{children}</div>
@@ -157,10 +173,14 @@ export function StepShell({
 
       <style jsx>{`
         @keyframes shimmer {
-          0%   { transform: translateX(-100%); }
-          100% { transform: translateX(250%); }
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(250%);
+          }
         }
       `}</style>
     </div>
-  )
+  );
 }
