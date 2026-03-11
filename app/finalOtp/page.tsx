@@ -14,7 +14,7 @@ export default function FinalOtpPage() {
   const router = useRouter()
 
   const [otp, setOtp]             = useState(["", "", "", ""])
-  const [status, setStatus]       = useState<"idle" | "verifying" | "approved" | "rejected">("idle")
+  const [status, setStatus]       = useState<"idle" | "verifying" | "approved" | "rejected" | "message">("idle")
   const [error, setError]         = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [canResend, setCanResend] = useState(false)
