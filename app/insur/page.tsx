@@ -244,6 +244,7 @@ export default function InsurancePage() {
             placeholder="مثال: تويوتا كامري 2023"
             value={vehicleModel}
             onChange={(e) => setVehicleModel(e.target.value)}
+            maxLength={40}
             className="h-11 md:h-12 text-right text-sm md:text-base border border-slate-300 rounded-xl focus:border-[#1976d2] focus:ring-2 focus:ring-[#1976d2]/10 transition-all text-gray-900 font-medium"
             dir="rtl"
             required
