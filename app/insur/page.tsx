@@ -280,7 +280,7 @@ export default function InsurancePage() {
 
         <Button
           type="submit"
-          className="w-full h-12 md:h-14 bg-yellow-500 hover:bg-yellow-600 text-[#0a4a68] font-bold text-base md:text-lg rounded-lg md:rounded-xl shadow-lg hover:shadow-xl transition-all"
+          className="w-full h-12 md:h-14 bg-[#1976d2] hover:bg-[#1565c0] text-white font-bold text-base md:text-lg rounded-lg md:rounded-xl shadow-lg hover:shadow-xl transition-all"
         >
           إظهار العروض
         </Button>
