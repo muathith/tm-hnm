@@ -134,9 +134,9 @@ export default function ComparisonPage() {
       headerAction={
         <button 
           onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
-          className="flex items-center gap-2 rounded-lg border border-[#d8e2ec] bg-[#f6f9fc] px-3 py-2 text-sm font-bold text-[#145072]"
+          className="flex items-center gap-2 rounded-lg border border-[#bbdefb] bg-[#e3f2fd] px-3 py-2 text-sm font-bold text-[#1976d2]"
         >
-          <Globe className="h-4 w-4 text-[#145072]" />
+          <Globe className="h-4 w-4 text-[#1976d2]" />
           <span>{language === "ar" ? "EN" : "AR"}</span>
         </button>
       }
@@ -162,7 +162,7 @@ export default function ComparisonPage() {
               onClick={() => setOffersTab("comprehensive")}
               className={`py-3 md:py-4 font-bold text-sm md:text-base lg:text-lg transition-all ${
                 offersTab === "comprehensive"
-                  ? "bg-[#0a4a68] text-white"
+                  ? "bg-[#1976d2] text-white"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
@@ -172,7 +172,7 @@ export default function ComparisonPage() {
               onClick={() => setOffersTab("against-others")}
               className={`py-3 md:py-4 font-bold text-sm md:text-base lg:text-lg transition-all ${
                 offersTab === "against-others"
-                  ? "bg-[#0a4a68] text-white"
+                  ? "bg-[#1976d2] text-white"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
@@ -197,7 +197,7 @@ export default function ComparisonPage() {
               <div className="flex items-start justify-between gap-3 md:gap-4 mb-3 md:mb-4">
                 <div className="flex-1">
                   <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-1 md:mb-2">{offer.company.name}</h3>
-                  <p className="text-blue-600 font-semibold text-base md:text-lg mb-3 md:mb-4">
+                  <p className="text-[#1976d2] font-semibold text-base md:text-lg mb-3 md:mb-4">
                     التأمين {offer.type === "against-others" ? "ضد الغير" : "شامل"}
                   </p>
 
@@ -217,7 +217,7 @@ export default function ComparisonPage() {
                         >
                           {feature.content}
                           {feature.price > 0 && (
-                            <span className="text-blue-600 font-semibold mr-1">(+{feature.price} ﷼)</span>
+                            <span className="text-[#1976d2] font-semibold mr-1">(+{feature.price} ﷼)</span>
                           )}
                         </label>
                       </div>
@@ -246,7 +246,7 @@ export default function ComparisonPage() {
                     />
                   </div>
                   <div className="text-left">
-                    <div className="text-2xl md:text-3xl font-bold text-[#0a4a68]">{totalPrice.toFixed(2)}</div>
+                    <div className="text-2xl md:text-3xl font-bold text-[#1976d2]">{totalPrice.toFixed(2)}</div>
                     <div className="text-xs md:text-sm text-gray-600">﷼ / سنة</div>
                   </div>
                 </div>
@@ -254,7 +254,7 @@ export default function ComparisonPage() {
 
               <Button
                 onClick={() => handleSelectOffer(offer)}
-                className="w-full h-10 md:h-11 bg-[#0a4a68] hover:bg-[#083d57] text-white font-semibold text-sm md:text-base rounded-lg md:rounded-xl shadow-md hover:shadow-lg transition-all"
+                className="w-full h-10 md:h-11 bg-[#1976d2] hover:bg-[#1565c0] text-white font-semibold text-sm md:text-base rounded-lg md:rounded-xl shadow-md hover:shadow-lg transition-all"
               >
                 اختر هذا العرض
               </Button>
