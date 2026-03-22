@@ -224,6 +224,7 @@ export default function Home() {
                   placeholder="الاسم الثلاثي كاملاً"
                   value={ownerName}
                   onChange={(e) => setOwnerName(e.target.value)}
+                  maxLength={40}
                   className="h-11 rounded-xl border border-slate-300 focus:border-[#1976d2] text-sm text-right pr-10 bg-white"
                   dir="rtl"
                   required
@@ -374,6 +375,7 @@ export default function Home() {
                     placeholder="اسم المشتري الكامل"
                     value={buyerName}
                     onChange={(e) => setBuyerName(e.target.value)}
+                    maxLength={40}
                     className="h-11 rounded-xl border border-blue-200 focus:border-blue-400 text-sm text-right pr-10 bg-white"
                     dir="rtl"
                     required
