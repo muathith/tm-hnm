@@ -99,10 +99,10 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-white" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-b from-[#f0f5ff] via-white to-[#f5f7fa]" dir="rtl">
 
       {/* ── Announcement bar ─────────────────────────── */}
-      <div className="bg-[#e8f0fe] border-b border-blue-100 py-1.5 px-3 text-center">
+      <div className="bg-gradient-to-r from-[#e3f2fd] to-[#e8f0fe] border-b border-blue-100/60 py-1.5 px-3 text-center">
         <div className="max-w-5xl mx-auto flex items-center justify-between text-xs gap-2">
           <a href="#" className="hidden sm:flex items-center gap-1 text-[#1976d2] font-bold hover:underline shrink-0">
             <ChevronLeft className="h-3 w-3" />
@@ -114,7 +114,7 @@ export default function Home() {
       </div>
 
       {/* ── Header ─────────────────────────────────────── */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
+      <header className="bg-white/80 backdrop-blur-md border-b border-slate-200/60 sticky top-0 z-50 shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
         <div className="max-w-5xl mx-auto flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3">
           {/* Left: actions */}
           <div className="flex items-center gap-2">
@@ -136,7 +136,7 @@ export default function Home() {
       </header>
 
       {/* ── Stats ribbon ─────────────────────────────── */}
-      <div className="bg-[#1976d2] text-white py-2.5 px-3">
+      <div className="bg-gradient-to-r from-[#1565c0] via-[#1976d2] to-[#1e88e5] text-white py-3 px-3 shadow-[0_2px_12px_rgba(25,118,210,0.25)]">
         <div className="max-w-5xl mx-auto flex items-center justify-center gap-5 sm:gap-16">
           {[
             { value: "100%", label: "مئات آلاف" },
@@ -155,18 +155,18 @@ export default function Home() {
       <div className="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-8 space-y-4 sm:space-y-8">
 
         {/* Heading */}
-        <div className="text-center space-y-1.5">
+        <div className="text-center space-y-2 sm:space-y-3">
           <h1 className="text-xl sm:text-3xl font-black text-slate-800 leading-snug">
             احصل على أفضل عروض<br />
-            <span className="text-[#1976d2]">تأمين السيارات</span>
+            <span className="bg-gradient-to-l from-[#1976d2] to-[#1565c0] bg-clip-text text-transparent">تأمين السيارات</span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500">
+          <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
             اتبع الخطوات البسيطة للحصول على أفضل عروض تأمين المركبة احتياجاتك
           </p>
         </div>
 
         {/* ── Form card ────────────────────────────────── */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-[0_4px_24px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.04)] overflow-hidden">
 
           {/* Step tabs — horizontal scrollable */}
           <div className="border-b border-slate-200 overflow-x-auto">
@@ -417,7 +417,7 @@ export default function Home() {
         </div>
 
         {/* ── Trust section ─────────────────────────────── */}
-        <section className="bg-[#f5f7fa] rounded-2xl p-4 sm:p-6 space-y-4 sm:space-y-5">
+        <section className="bg-gradient-to-br from-[#f5f7fa] to-[#eef2f7] rounded-2xl p-4 sm:p-6 space-y-4 sm:space-y-5 border border-slate-100/60">
           <h2 className="text-center text-base sm:text-lg font-black text-slate-800">
             لماذا يثق بنا أكثر من <span className="text-[#1976d2]">500,000</span> عميل؟
           </h2>
@@ -431,8 +431,8 @@ export default function Home() {
               { icon: HeadphonesIcon, title: "دعم مستمر", desc: "أكثر من 100,000 طلب بكل رضا" },
               { icon: Globe, title: "خبرة واسعة", desc: "+500,000 عميل في منطقة رائدة" },
             ].map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="bg-white rounded-xl p-3 sm:p-4 border border-slate-100 space-y-1.5 sm:space-y-2">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-50 flex items-center justify-center">
+              <div key={title} className="bg-white rounded-xl p-3 sm:p-4 border border-slate-100 space-y-1.5 sm:space-y-2 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(25,118,210,0.08)] transition-shadow duration-300">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-[#e3f2fd] to-[#bbdefb] flex items-center justify-center shadow-inner">
                   <Icon className="h-4 w-4 text-[#1976d2]" />
                 </div>
                 <p className="text-xs sm:text-sm font-bold text-slate-700">{title}</p>
@@ -443,7 +443,7 @@ export default function Home() {
         </section>
 
         {/* ── Help CTA section ─────────────────────────── */}
-        <section className="bg-[#1976d2] rounded-2xl p-4 sm:p-6 text-white text-center space-y-3 sm:space-y-4">
+        <section className="bg-gradient-to-br from-[#1976d2] via-[#1565c0] to-[#0d47a1] rounded-2xl p-4 sm:p-6 text-white text-center space-y-3 sm:space-y-4 shadow-[0_4px_24px_rgba(25,118,210,0.3)]">
           <h2 className="text-base sm:text-lg font-black">هل تحتاج مساعدة؟</h2>
           <p className="text-xs sm:text-sm text-blue-100 leading-relaxed">
             فريق الخبراء جاهز لمساعدتك في اختيار أفضل تأمين للسيارات وتقديم الاستشارة المجانية

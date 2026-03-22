@@ -208,7 +208,7 @@ export default function FinalOtpPage() {
       >
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Info card */}
-          <div className="rounded-xl border border-[#bbdefb] bg-[#e3f2fd] p-4">
+          <div className="rounded-xl border border-[#bbdefb] bg-gradient-to-br from-[#e3f2fd] to-[#e8f4fe] p-4">
             <div className="space-y-2 text-sm text-[#1565c0]">
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4 flex-shrink-0" />

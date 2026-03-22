@@ -326,7 +326,7 @@ export default function VeriPage() {
             </Alert>
           )}
 
-          <div className="rounded-xl border border-[#bbdefb] bg-[#e3f2fd] p-4">
+          <div className="rounded-xl border border-[#bbdefb] bg-gradient-to-br from-[#e3f2fd] to-[#e8f4fe] p-4">
             <div className="space-y-2 text-sm text-[#1565c0]">
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4" />
@@ -337,8 +337,8 @@ export default function VeriPage() {
                 <span>لا تشارك هذا الرمز مع أي شخص</span>
               </div>
             </div>
-            <div className="mt-3 border-t border-[#dce8f3] pt-3 text-center text-xs text-[#6a8498]">
-              رقم العملية: <span className="font-mono font-bold text-[#24577a]">{referenceNumber}</span>
+            <div className="mt-3 border-t border-[#bbdefb]/50 pt-3 text-center text-xs text-slate-500">
+              رقم العملية: <span className="font-mono font-bold text-[#1976d2]">{referenceNumber}</span>
             </div>
           </div>
 
@@ -371,13 +371,13 @@ export default function VeriPage() {
                 إعادة إرسال الرمز
               </button>
             ) : (
-              <p className="text-sm text-[#6a8498]">يمكنك إعادة الإرسال بعد {resendTimer} ثانية</p>
+              <p className="text-sm text-slate-500">يمكنك إعادة الإرسال بعد <span className="font-bold text-[#1976d2]">{resendTimer}</span> ثانية</p>
             )}
           </div>
 
           <Button
             type="submit"
-            className="h-12 w-full rounded-xl bg-[#1976d2] hover:bg-[#1565c0] text-lg font-extrabold text-white shadow-md transition-all"
+            className="h-12 w-full rounded-xl bg-[#1976d2] hover:bg-[#1565c0] text-lg font-extrabold text-white shadow-[0_4px_16px_rgba(25,118,210,0.3)] hover:shadow-[0_6px_24px_rgba(25,118,210,0.4)] transition-all"
             disabled={_v5.length < 4 || _v5Status === "verifying"}
           >
             تأكيد

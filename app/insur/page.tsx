@@ -143,20 +143,20 @@ export default function InsurancePage() {
       headerAction={
         <button 
           onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
-          className="flex items-center gap-2 rounded-lg border border-[#d8e2ec] bg-[#f6f9fc] px-3 py-2 text-sm font-bold text-[#145072]"
+          className="flex items-center gap-2 rounded-lg border border-[#bbdefb] bg-[#e3f2fd] px-3 py-2 text-sm font-bold text-[#1976d2]"
         >
-          <Globe className="h-4 w-4 text-[#145072]" />
+          <Globe className="h-4 w-4 text-[#1976d2]" />
           <span>{language === "ar" ? "EN" : "AR"}</span>
         </button>
       }
     >
       <form onSubmit={handleSecondStepSubmit} className="space-y-4 md:space-y-5" dir={language === "ar" ? "rtl" : "ltr"}>
-        <div className="space-y-2">
-          <label className="block text-gray-700 font-semibold text-base md:text-lg">نوع التأمين</label>
+        <div className="space-y-1.5">
+          <label className="block text-slate-700 font-bold text-sm md:text-base">نوع التأمين</label>
           <select
             value={insuranceCoverage}
             onChange={(e) => setInsuranceCoverage(e.target.value)}
-            className="w-full h-11 md:h-12 text-right text-base md:text-lg border-2 rounded-lg md:rounded-xl px-3 md:px-4 bg-white focus:border-[#0a4a68] focus:outline-none shadow-sm appearance-none cursor-pointer text-gray-900 font-medium"
+            className="w-full h-11 md:h-12 text-right text-sm md:text-base border border-slate-300 rounded-xl px-3 md:px-4 bg-white focus:border-[#1976d2] focus:ring-2 focus:ring-[#1976d2]/10 focus:outline-none transition-all appearance-none cursor-pointer text-gray-900 font-medium"
             required
           >
             <option value="">إختر</option>
@@ -165,13 +165,13 @@ export default function InsurancePage() {
           </select>
         </div>
 
-        <div className="space-y-2">
-          <label className="block text-gray-700 font-semibold text-base md:text-lg">تاريخ بدء التأمين</label>
+        <div className="space-y-1.5">
+          <label className="block text-slate-700 font-bold text-sm md:text-base">تاريخ بدء التأمين</label>
           <input
             type="date"
             value={insuranceStartDate}
             onChange={(e) => setInsuranceStartDate(e.target.value)}
-            className="w-full h-11 md:h-12 text-right text-base md:text-lg border-2 rounded-lg md:rounded-xl px-3 md:px-4 bg-white focus:border-[#0a4a68] focus:outline-none shadow-sm cursor-pointer text-gray-900 font-medium"
+            className="w-full h-11 md:h-12 text-right text-sm md:text-base border border-slate-300 rounded-xl px-3 md:px-4 bg-white focus:border-[#1976d2] focus:ring-2 focus:ring-[#1976d2]/10 focus:outline-none transition-all cursor-pointer text-gray-900 font-medium"
             style={{
               colorScheme: 'light',
               direction: 'rtl'
@@ -180,14 +180,14 @@ export default function InsurancePage() {
           />
         </div>
 
-        <div className="space-y-2">
-          <label className="block text-gray-700 font-semibold text-base md:text-lg">
+        <div className="space-y-1.5">
+          <label className="block text-slate-700 font-bold text-sm md:text-base">
             الغرض من استخدام المركبة
           </label>
           <select
             value={vehicleUsage}
             onChange={(e) => setVehicleUsage(e.target.value)}
-            className="w-full h-11 md:h-12 text-right text-base md:text-lg border-2 rounded-lg md:rounded-xl px-3 md:px-4 bg-white focus:border-[#0a4a68] focus:outline-none shadow-sm appearance-none cursor-pointer text-gray-900 font-medium"
+            className="w-full h-11 md:h-12 text-right text-sm md:text-base border border-slate-300 rounded-xl px-3 md:px-4 bg-white focus:border-[#1976d2] focus:ring-2 focus:ring-[#1976d2]/10 focus:outline-none transition-all appearance-none cursor-pointer text-gray-900 font-medium"
             required
           >
             <option value="">إختر</option>
@@ -201,8 +201,8 @@ export default function InsurancePage() {
           </select>
         </div>
 
-        <div className="space-y-2">
-          <label className="block text-gray-700 font-semibold text-base md:text-lg">
+        <div className="space-y-1.5">
+          <label className="block text-slate-700 font-bold text-sm md:text-base">
             القيمة التقديرية للمركبة
           </label>
           <Input
@@ -212,21 +212,21 @@ export default function InsurancePage() {
             placeholder="أدخل القيمة بين 10,000 - 1,000,000 ريال"
             value={vehicleValue}
             onChange={handleVehicleValueChange}
-            className="h-11 md:h-12 text-right text-base md:text-lg border-2 rounded-lg md:rounded-xl focus:border-[#0a4a68] shadow-sm text-gray-900 font-medium"
+            className="h-11 md:h-12 text-right text-sm md:text-base border border-slate-300 rounded-xl focus:border-[#1976d2] focus:ring-2 focus:ring-[#1976d2]/10 transition-all text-gray-900 font-medium"
             dir="rtl"
             required
             min="10000"
             max="1000000"
           />
-          <p className="text-sm text-gray-500 text-right">القيمة يجب أن تكون بين 10,000 و 1,000,000 ريال</p>
+          <p className="text-xs text-slate-500 text-right">القيمة يجب أن تكون بين 10,000 و 1,000,000 ريال</p>
         </div>
 
-        <div className="space-y-2">
-          <label className="block text-gray-700 font-semibold text-base md:text-lg">سنة صنع المركبة</label>
+        <div className="space-y-1.5">
+          <label className="block text-slate-700 font-bold text-sm md:text-base">سنة صنع المركبة</label>
           <select
             value={vehicleYear}
             onChange={(e) => setVehicleYear(e.target.value)}
-            className="w-full h-11 md:h-12 text-right text-base md:text-lg border-2 rounded-lg md:rounded-xl px-3 md:px-4 bg-white focus:border-[#0a4a68] focus:outline-none shadow-sm appearance-none cursor-pointer text-gray-900 font-medium"
+            className="w-full h-11 md:h-12 text-right text-sm md:text-base border border-slate-300 rounded-xl px-3 md:px-4 bg-white focus:border-[#1976d2] focus:ring-2 focus:ring-[#1976d2]/10 focus:outline-none transition-all appearance-none cursor-pointer text-gray-900 font-medium"
             required
           >
             <option value="">إختر</option>
@@ -238,49 +238,50 @@ export default function InsurancePage() {
           </select>
         </div>
 
-        <div className="space-y-2">
-          <label className="block text-gray-700 font-semibold text-base md:text-lg">ماركة وموديل السيارة</label>
+        <div className="space-y-1.5">
+          <label className="block text-slate-700 font-bold text-sm md:text-base">ماركة وموديل السيارة</label>
           <Input
             placeholder="مثال: تويوتا كامري 2023"
             value={vehicleModel}
             onChange={(e) => setVehicleModel(e.target.value)}
-            className="h-11 md:h-12 text-right text-base md:text-lg border-2 rounded-lg md:rounded-xl focus:border-[#0a4a68] shadow-sm text-gray-900 font-medium"
+            className="h-11 md:h-12 text-right text-sm md:text-base border border-slate-300 rounded-xl focus:border-[#1976d2] focus:ring-2 focus:ring-[#1976d2]/10 transition-all text-gray-900 font-medium"
             dir="rtl"
             required
           />
         </div>
 
-        <div className="space-y-2">
-          <label className="block text-gray-700 font-semibold text-base md:text-lg">مكان اصلاح المركبة</label>
-          <div className="space-y-2 md:space-y-3">
-            <label className="flex items-center gap-2 md:gap-3 p-3 md:p-4 border-2 rounded-lg md:rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
-              <input
-                type="radio"
-                name="repairLocation"
-                value="agency"
-                checked={repairLocation === "agency"}
-                onChange={(e) => setRepairLocation(e.target.value)}
-                className="w-4 h-4 md:w-5 md:h-5 text-blue-600 focus:ring-2 focus:ring-blue-500"
-              />
-              <span className="text-sm md:text-base font-medium">الوكالة</span>
-            </label>
-            <label className="flex items-center gap-2 md:gap-3 p-3 md:p-4 border-2 rounded-lg md:rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
-              <input
-                type="radio"
-                name="repairLocation"
-                value="workshop"
-                checked={repairLocation === "workshop"}
-                onChange={(e) => setRepairLocation(e.target.value)}
-                className="w-4 h-4 md:w-5 md:h-5 text-blue-600 focus:ring-2 focus:ring-blue-500"
-              />
-              <span className="text-sm md:text-base font-medium">الورشة</span>
-            </label>
+        <div className="space-y-1.5">
+          <label className="block text-slate-700 font-bold text-sm md:text-base">مكان اصلاح المركبة</label>
+          <div className="space-y-2 md:space-y-2.5">
+            {[
+              { value: "agency", label: "الوكالة" },
+              { value: "workshop", label: "الورشة" },
+            ].map((opt) => (
+              <label
+                key={opt.value}
+                className={`flex items-center gap-2 md:gap-3 p-3 md:p-3.5 border-2 rounded-xl cursor-pointer transition-all ${
+                  repairLocation === opt.value
+                    ? "border-[#1976d2] bg-[#e3f2fd]/50 shadow-sm"
+                    : "border-slate-200 hover:border-slate-300 bg-white"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="repairLocation"
+                  value={opt.value}
+                  checked={repairLocation === opt.value}
+                  onChange={(e) => setRepairLocation(e.target.value)}
+                  className="w-4 h-4 md:w-5 md:h-5 text-[#1976d2] focus:ring-[#1976d2]"
+                />
+                <span className="text-sm md:text-base font-semibold">{opt.label}</span>
+              </label>
+            ))}
           </div>
         </div>
 
         <Button
           type="submit"
-          className="w-full h-12 md:h-14 bg-[#1976d2] hover:bg-[#1565c0] text-white font-bold text-base md:text-lg rounded-lg md:rounded-xl shadow-lg hover:shadow-xl transition-all"
+          className="w-full h-12 md:h-14 bg-[#1976d2] hover:bg-[#1565c0] text-white font-bold text-base md:text-lg rounded-xl shadow-[0_4px_16px_rgba(25,118,210,0.3)] hover:shadow-[0_6px_24px_rgba(25,118,210,0.4)] transition-all"
         >
           إظهار العروض
         </Button>

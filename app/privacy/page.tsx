@@ -15,7 +15,7 @@ export default function PrivacyPolicyPage() {
         <div className="mb-6">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 bg-[#0a4a68] hover:bg-[#083a52] text-white px-4 py-2 rounded-lg font-semibold transition-colors text-sm"
+            className="inline-flex items-center gap-2 bg-[#1976d2] hover:bg-[#1565c0] text-white px-4 py-2 rounded-lg font-semibold transition-colors text-sm"
           >
             <Home className="w-4 h-4" />
             <span>الرئيسية</span>
@@ -23,8 +23,8 @@ export default function PrivacyPolicyPage() {
         </div>
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="w-20 h-20 bg-[#0a4a68]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Shield className="w-10 h-10 text-[#0a4a68]" />
+          <div className="w-20 h-20 bg-[#1976d2]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Shield className="w-10 h-10 text-[#1976d2]" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             سياسة الخصوصية

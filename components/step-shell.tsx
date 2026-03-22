@@ -32,31 +32,29 @@ export function StepShell({
 
   return (
     <div
-      className="min-h-screen bg-[#f0f4f8] px-3 py-4 sm:px-4 sm:py-6"
+      className="min-h-screen bg-gradient-to-b from-[#e8f0fe] via-[#f0f4f8] to-[#f5f7fa] px-3 py-4 sm:px-4 sm:py-6"
       dir="rtl"
     >
-      <div className={cn("mx-auto w-full space-y-3", maxWidthClassName)}>
+      <div className={cn("mx-auto w-full space-y-3 sm:space-y-4", maxWidthClassName)}>
         {/* ── Header ─────────────────────────────── */}
-        <header className="flex items-center justify-between rounded-2xl bg-white border border-slate-200 px-4 py-3 shadow-sm">
-          {/* Left side: login + globe */}
+        <header className="flex items-center justify-between rounded-2xl bg-white/80 backdrop-blur-md border border-white/60 px-4 py-3 shadow-[0_2px_16px_rgba(25,118,210,0.08)]">
           <div className="flex items-center gap-2">
-            <button className="rounded-xl bg-[#1976d2] text-white px-3 py-1.5 text-xs font-bold hover:bg-[#1565c0] transition-colors">
+            <button className="rounded-xl bg-[#1976d2] text-white px-3.5 py-1.5 text-xs font-bold hover:bg-[#1565c0] transition-all shadow-sm hover:shadow-md">
               تسجيل الدخول
             </button>
-            <Globe className="h-4 w-4 text-slate-400" />
+            {headerAction || <Globe className="h-4 w-4 text-slate-400" />}
           </div>
 
-          {/* Right side: logo + menu */}
           <div className="flex items-center gap-2">
-            <Menu className="h-5 w-5 text-slate-500" />
+            <Menu className="h-5 w-5 text-slate-400" />
             <span className="text-lg font-black text-[#1976d2]">تأميني</span>
             <img src="/tameeni-logo.webp" alt="تأميني" className="h-8 w-8 rounded-xl" />
           </div>
         </header>
 
         {/* ── Progress tracker ───────────────────── */}
-        <section className="rounded-2xl overflow-hidden shadow-sm border border-slate-200">
-          <div className="bg-white px-4 py-3.5">
+        <section className="rounded-2xl overflow-hidden shadow-[0_2px_16px_rgba(0,0,0,0.06)] border border-white/80 bg-white/90 backdrop-blur-sm">
+          <div className="px-4 py-3.5">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <span className="relative flex h-2.5 w-2.5">
@@ -67,7 +65,7 @@ export function StepShell({
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-semibold text-slate-400">الخطوة</span>
-                <span className="bg-[#1976d2] text-white text-xs font-black px-2 py-0.5 rounded-lg">
+                <span className="bg-[#1976d2] text-white text-xs font-black px-2 py-0.5 rounded-lg shadow-sm">
                   {step}
                 </span>
                 <span className="text-xs text-slate-400">من {totalSteps}</span>
@@ -83,21 +81,21 @@ export function StepShell({
                   <div key={i} className="flex items-center flex-1">
                     <div
                       className={cn(
-                        "flex-shrink-0 rounded-full transition-all duration-300",
+                        "flex-shrink-0 rounded-full transition-all duration-500",
                         isCurrent
-                          ? "w-4 h-4 bg-[#1976d2] shadow-md shadow-blue-200 ring-2 ring-[#1976d2]/30"
+                          ? "w-4 h-4 bg-[#1976d2] shadow-[0_0_0_4px_rgba(25,118,210,0.15)] ring-2 ring-[#1976d2]/30"
                           : isCompleted
                             ? "w-3 h-3 bg-[#1976d2]"
                             : "w-2.5 h-2.5 bg-slate-200",
                       )}
                     />
                     {i < totalSteps - 1 && (
-                      <div className="flex-1 h-0.5 mx-0.5 rounded-full overflow-hidden bg-slate-200">
+                      <div className="flex-1 h-0.5 mx-0.5 rounded-full overflow-hidden bg-slate-100">
                         {isCompleted && (
-                          <div className="h-full w-full bg-[#1976d2] rounded-full" />
+                          <div className="h-full w-full bg-gradient-to-l from-[#42a5f5] to-[#1976d2] rounded-full" />
                         )}
                         {isCurrent && (
-                          <div className="h-full w-1/2 bg-[#1976d2] rounded-full" />
+                          <div className="h-full w-1/2 bg-gradient-to-l from-[#42a5f5] to-[#1976d2] rounded-full" />
                         )}
                       </div>
                     )}
@@ -130,13 +128,14 @@ export function StepShell({
         {/* ── Main card ──────────────────────────────── */}
         <section
           className={cn(
-            "rounded-2xl border border-slate-200 bg-white px-5 py-6 shadow-sm sm:px-6 sm:py-7",
+            "rounded-2xl border border-white/80 bg-white px-5 py-6 sm:px-6 sm:py-7",
+            "shadow-[0_4px_24px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.04)]",
             cardClassName,
           )}
         >
           {icon ? (
-            <div className="mb-4 flex justify-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#e3f2fd] text-[#1976d2] shadow-inner">
+            <div className="mb-5 flex justify-center">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#e3f2fd] to-[#bbdefb] text-[#1976d2] shadow-[0_4px_12px_rgba(25,118,210,0.12)]">
                 {icon}
               </div>
             </div>
@@ -151,7 +150,7 @@ export function StepShell({
             </p>
           ) : null}
 
-          <div className="mt-5 space-y-4">{children}</div>
+          <div className="mt-6 space-y-4">{children}</div>
         </section>
       </div>
     </div>

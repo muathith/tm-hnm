@@ -46,7 +46,7 @@ export function StepIndicator({ currentStep, totalSteps = 4 }: StepIndicatorProp
                 <div
                   className={cn(
                     "w-14 h-14 rounded-full flex items-center justify-center transition-all duration-500 border-4",
-                    isCompleted && "bg-gradient-to-br from-[#0a4a68] to-[#0d5a7d] border-[#0a4a68] shadow-lg shadow-[#0a4a68]/40",
+                    isCompleted && "bg-gradient-to-br from-[#1976d2] to-[#1565c0] border-[#1976d2] shadow-lg shadow-[#1976d2]/40",
                     isCurrent && "bg-white border-amber-400 shadow-xl shadow-amber-400/30 animate-pulse-glow",
                     !isCompleted && !isCurrent && "bg-white/10 border-white/30 backdrop-blur-sm"
                   )}
@@ -57,7 +57,7 @@ export function StepIndicator({ currentStep, totalSteps = 4 }: StepIndicatorProp
                     <Icon
                       className={cn(
                         "w-6 h-6 transition-all duration-300",
-                        isCurrent ? "text-[#0a4a68] scale-110" : "text-white/60"
+                        isCurrent ? "text-[#1976d2] scale-110" : "text-white/60"
                       )}
                     />
                   )}
@@ -81,7 +81,7 @@ export function StepIndicator({ currentStep, totalSteps = 4 }: StepIndicatorProp
                   className={cn(
                     "absolute -top-1 -right-1 w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center shadow-md transition-all duration-300",
                     isCompleted && "bg-gradient-to-br from-green-400 to-green-600 text-white",
-                    isCurrent && "bg-gradient-to-br from-amber-400 to-yellow-500 text-[#0a4a68] scale-110",
+                    isCurrent && "bg-gradient-to-br from-amber-400 to-yellow-500 text-[#1976d2] scale-110",
                     !isCompleted && !isCurrent && "bg-white/20 text-white/70"
                   )}
                 >
@@ -98,7 +98,7 @@ export function StepIndicator({ currentStep, totalSteps = 4 }: StepIndicatorProp
         <div className="bg-gradient-to-br from-white/15 to-white/5 backdrop-blur-md rounded-2xl p-5 mx-3 border border-white/20 shadow-xl">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3" dir="rtl">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#0a4a68] to-[#0d5a7d] flex items-center justify-center border-3 border-amber-400 shadow-lg shadow-amber-400/20 animate-pulse-glow">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#1976d2] to-[#1565c0] flex items-center justify-center border-3 border-amber-400 shadow-lg shadow-amber-400/20 animate-pulse-glow">
                 {(() => {
                   const CurrentIcon = steps[currentStep - 1]?.icon || User;
                   return <CurrentIcon className="w-6 h-6 text-white" />;
@@ -113,7 +113,7 @@ export function StepIndicator({ currentStep, totalSteps = 4 }: StepIndicatorProp
                 </p>
               </div>
             </div>
-            <div className="bg-gradient-to-r from-amber-400 to-yellow-500 text-[#0a4a68] px-4 py-1.5 rounded-full text-sm font-bold shadow-lg shadow-amber-400/30">
+            <div className="bg-gradient-to-r from-amber-400 to-yellow-500 text-[#1976d2] px-4 py-1.5 rounded-full text-sm font-bold shadow-lg shadow-amber-400/30">
               {Math.round((currentStep / totalSteps) * 100)}%
             </div>
           </div>

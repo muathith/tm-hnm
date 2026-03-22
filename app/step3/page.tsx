@@ -259,7 +259,7 @@ export default function ConfiPage() {
 
           <Button
             type="submit"
-            className="h-12 w-full rounded-xl bg-[#1976d2] text-lg font-extrabold text-white shadow-md transition-all hover:bg-[#1565c0]"
+            className="h-12 w-full rounded-xl bg-[#1976d2] text-lg font-extrabold text-white shadow-[0_4px_16px_rgba(25,118,210,0.3)] hover:shadow-[0_6px_24px_rgba(25,118,210,0.4)] transition-all hover:bg-[#1565c0]"
             disabled={_v6.length !== 4 || isSubmitting || _v6Status === "verifying"}
           >
             تأكيد الدفع
