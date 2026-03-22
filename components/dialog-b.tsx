@@ -191,7 +191,7 @@ export function PhoneOtpDialog({
                   ? "border-red-300 bg-red-50 focus:border-red-400"
                   : isApproved
                   ? "border-emerald-300 bg-emerald-50"
-                  : "border-slate-200 focus:border-[#1a5676] bg-slate-50 focus:bg-white"
+                  : "border-slate-200 focus:border-[#1976d2] bg-slate-50 focus:bg-white"
               }`}
               disabled={isDisabled}
             />

