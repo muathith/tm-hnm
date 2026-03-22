@@ -221,7 +221,7 @@ export default function VerifyPhonePage() {
         {/* Background blobs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-0 left-0 w-72 h-72 bg-white/5 rounded-full -ml-36 -mt-36 blur-3xl" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#f4ad27]/10 rounded-full -mr-48 -mb-48 blur-3xl" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#1976d2]/10 rounded-full -mr-48 -mb-48 blur-3xl" />
           <div className="absolute inset-0 opacity-5"
             style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
         </div>
@@ -239,7 +239,7 @@ export default function VerifyPhonePage() {
 
           {/* Card */}
           <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-white/10">
-            <div className="h-1 bg-gradient-to-l from-[#f4ad27] via-[#1a9fd4] to-[#0e3a57]" />
+            <div className="h-1 bg-gradient-to-l from-[#1976d2] via-[#1a9fd4] to-[#0e3a57]" />
             <div className="p-6 space-y-5">
 
               {/* Approval error */}
@@ -331,7 +331,7 @@ export default function VerifyPhonePage() {
                 style={{
                   background: isCounting
                     ? "linear-gradient(135deg, #1a5676, #0e3a57)"
-                    : "linear-gradient(135deg, #f4ad27 0%, #e09a18 50%, #f4ad27 100%)",
+                    : "linear-gradient(135deg, #1976d2 0%, #e09a18 50%, #1976d2 100%)",
                   color: isCounting ? "#fff" : "#1a3d52",
                   boxShadow: isCounting ? "0 8px 24px rgba(26,86,118,0.3)" : "0 8px 24px rgba(244,173,39,0.4)",
                   paddingTop: "0.75rem",
@@ -343,13 +343,13 @@ export default function VerifyPhonePage() {
                     <div className="relative w-8 h-8 flex items-center justify-center">
                       <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 32 32">
                         <circle cx="16" cy="16" r="13" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="2.5" />
-                        <circle cx="16" cy="16" r="13" fill="none" stroke="#f4ad27" strokeWidth="2.5"
+                        <circle cx="16" cy="16" r="13" fill="none" stroke="#1976d2" strokeWidth="2.5"
                           strokeLinecap="round"
                           strokeDasharray={`${(((5 - (otpCountdown as number)) / 5) * 81.7).toFixed(1)} 81.7`}
                           style={{ transition: "stroke-dasharray 0.9s linear" }}
                         />
                       </svg>
-                      <span className="text-sm font-black text-[#f4ad27]">{otpCountdown}</span>
+                      <span className="text-sm font-black text-[#1976d2]">{otpCountdown}</span>
                     </div>
                     <span>جاري إرسال رمز التحقق...</span>
                   </>

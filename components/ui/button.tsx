@@ -10,17 +10,17 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-gradient-to-r from-[#0a4a68] to-[#0d5a7d] text-white shadow-lg shadow-[#0a4a68]/25 hover:shadow-xl hover:shadow-[#0a4a68]/30 hover:from-[#0d5a7d] hover:to-[#0a4a68]",
+          "bg-[#1976d2] text-white shadow-lg shadow-blue-500/25 hover:bg-[#1565c0] hover:shadow-xl hover:shadow-blue-500/30",
         destructive:
           "bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-500/25 hover:shadow-xl hover:shadow-red-500/30",
         outline:
-          "border-2 border-[#0a4a68] bg-white text-[#0a4a68] shadow-sm hover:bg-[#0a4a68] hover:text-white",
+          "border-2 border-[#1976d2] bg-white text-[#1976d2] shadow-sm hover:bg-[#1976d2] hover:text-white",
         secondary:
           "bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 shadow-sm hover:from-gray-200 hover:to-gray-300",
-        ghost: "hover:bg-[#0a4a68]/10 hover:text-[#0a4a68]",
-        link: "text-[#0a4a68] underline-offset-4 hover:underline",
+        ghost: "hover:bg-[#1976d2]/10 hover:text-[#1976d2]",
+        link: "text-[#1976d2] underline-offset-4 hover:underline",
         accent:
-          "bg-gradient-to-r from-amber-400 to-yellow-500 text-[#0a4a68] shadow-lg shadow-amber-400/25 hover:shadow-xl hover:shadow-amber-400/30 font-bold",
+          "bg-[#1976d2] text-white shadow-lg shadow-blue-500/25 hover:bg-[#1565c0] hover:shadow-xl hover:shadow-blue-500/30 font-bold",
       },
       size: {
         default: "h-10 px-5 py-2",

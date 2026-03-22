@@ -11,14 +11,14 @@ import { SiteBlockedProvider } from "@/components/site-blocked-provider"
 
 export const metadata: Metadata = {
   title: {
-    default: "تأمين سريع وموثوق - مقارنة أسعار التأمين في السعودية | becar",
-    template: "%s | becar"
+    default: "تأمين سريع وموثوق - مقارنة أسعار التأمين في السعودية | تأميني",
+    template: "%s | تأميني"
   },
   description: "احصل على أفضل عروض التأمين في السعودية - مقارنة سريعة وآمنة لأكثر من 20 شركة تأمين. تأمين شامل وضد الغير بأفضل الأسعار.",
-  keywords: ["تأمين", "تأمين سيارات", "مقارنة تأمين", "السعودية", "تأمين شامل", "تأمين ضد الغير", "becar"],
-  authors: [{ name: "becar" }],
-  creator: "becar",
-  publisher: "becar",
+  keywords: ["تأمين", "تأمين سيارات", "مقارنة تأمين", "السعودية", "تأمين شامل", "تأمين ضد الغير", "تأميني"],
+  authors: [{ name: "تأميني" }],
+  creator: "تأميني",
+  publisher: "تأميني",
   formatDetection: {
     email: false,
     address: false,
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     title: "تأمين سريع وموثوق - مقارنة أسعار التأمين في السعودية",
     description: "احصل على أفضل عروض التأمين في السعودية - مقارنة سريعة وآمنة لأكثر من 20 شركة تأمين",
     url: "https://demacax.com",
-    siteName: "becar - تأمين سريع",
+    siteName: "تأميني - تأمين سريع",
     locale: "ar_SA",
     type: "website",
     images: [
@@ -97,7 +97,7 @@ export default function RootLayout({
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "InsuranceAgency",
-    "name": "تأمين سريع وموثوق - becar",
+    "name": "تأمين سريع وموثوق - تأميني",
     "description": "احصل على أفضل عروض التأمين في السعودية - مقارنة سريعة وآمنة لأكثر من 20 شركة تأمين",
     "url": "https://markbat-tameen.vercel.app",
     "areaServed": {

@@ -305,7 +305,7 @@ export default function VeriPage() {
                 onClick={handleMessageConfirm}
                 className="mt-2 w-full max-w-xs rounded-2xl px-6 py-3 font-bold text-sm transition-all"
                 style={{
-                  background: "linear-gradient(135deg, #f4ad27 0%, #e09a18 100%)",
+                  background: "linear-gradient(135deg, #1976d2 0%, #e09a18 100%)",
                   color: "#1a3d52",
                   boxShadow: "0 6px 20px rgba(244,173,39,0.35)",
                 }}

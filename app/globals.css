@@ -10,13 +10,13 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
+  --background-start-rgb: 240, 244, 248;
   --background-end-rgb: 255, 255, 255;
-  --primary-color: #0a4a68;
-  --primary-light: #0d5a7d;
-  --primary-dark: #083d57;
-  --accent-color: #f59e0b;
-  --accent-light: #fbbf24;
+  --primary-color: #1976d2;
+  --primary-light: #42a5f5;
+  --primary-dark: #1565c0;
+  --accent-color: #1976d2;
+  --accent-light: #42a5f5;
 }
 
 @media (prefers-color-scheme: dark) {

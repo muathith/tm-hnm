@@ -8,7 +8,7 @@
 
 ## Overview
 
-This is a Next.js insurance comparison platform (becar) targeting Saudi Arabian users. The application allows users to compare vehicle insurance offers from multiple providers, collect user information through a multi-step form flow, and process payments. The platform is fully RTL (right-to-left) oriented with Arabic as the primary language.
+This is a Next.js insurance comparison platform (تأميني) targeting Saudi Arabian users. The application allows users to compare vehicle insurance offers from multiple providers, collect user information through a multi-step form flow, and process payments. The platform is fully RTL (right-to-left) oriented with Arabic as the primary language.
 
 The application follows a step-by-step wizard pattern where users:
 1. Enter personal and vehicle information
@@ -25,7 +25,7 @@ Preferred communication style: Simple, everyday language.
 ### Frontend Architecture
 - **Framework**: Next.js 15 with App Router
 - **UI Components**: shadcn/ui component library with Radix UI primitives
-- **Styling**: Tailwind CSS with custom theme configuration extending the default palette with brand colors (primary: #0a4a68, accent: amber/yellow)
+- **Styling**: Tailwind CSS with custom theme configuration extending the default palette with brand colors (primary: #1976d2 Tameeni blue, clean minimal design)
 - **Font**: Tajawal (Arabic-optimized Google Font)
 - **State Management**: React useState/useEffect hooks with localStorage for visitor persistence
 
