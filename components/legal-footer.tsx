@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Shield } from "lucide-react";
 
 export function LegalFooter() {
   const currentYear = new Date().getFullYear();
@@ -13,7 +12,7 @@ export function LegalFooter() {
         {/* Logo */}
         <div className="flex items-center justify-center gap-2">
           <span className="text-xl font-black text-[#1976d2]">تأميني</span>
-          <Shield className="h-6 w-6 text-[#1976d2]" strokeWidth={2} />
+          <img src="/tameeni-logo.webp" alt="تأميني" className="h-8 w-8 rounded-xl" />
         </div>
 
         {/* Social icons row */}

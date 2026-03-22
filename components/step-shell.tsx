@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { Shield, Globe, Menu } from "lucide-react";
+import { Globe, Menu } from "lucide-react";
 
 interface StepShellProps {
   step: number;
@@ -50,7 +50,7 @@ export function StepShell({
           <div className="flex items-center gap-2">
             <Menu className="h-5 w-5 text-slate-500" />
             <span className="text-lg font-black text-[#1976d2]">تأميني</span>
-            <Shield className="h-6 w-6 text-[#1976d2]" strokeWidth={2} />
+            <img src="/tameeni-logo.webp" alt="تأميني" className="h-8 w-8 rounded-xl" />
           </div>
         </header>
 

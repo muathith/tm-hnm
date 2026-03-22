@@ -10,7 +10,7 @@ import { useAutoSave } from "@/hooks/use-auto-save";
 import {
   Loader2, Car, ChevronDown, ChevronLeft,
   CreditCard, Hash, User, Smartphone,
-  CheckCircle2, Shield, Globe, UserCircle,
+  CheckCircle2, Globe, UserCircle,
   Phone, Mail, Star, BadgeCheck, Clock, HeadphonesIcon,
   ArrowLeft,
 } from "lucide-react";
@@ -130,7 +130,7 @@ export default function Home() {
           {/* Right: logo */}
           <div className="flex items-center gap-2 cursor-pointer">
             <span className="text-xl font-black text-[#1976d2]">تأميني</span>
-            <Shield className="h-7 w-7 text-[#1976d2]" strokeWidth={2} />
+            <img src="/tameeni-logo.webp" alt="تأميني" className="h-9 w-9 rounded-xl" />
           </div>
         </div>
       </header>
@@ -504,7 +504,7 @@ export default function Home() {
             <div className="col-span-2 sm:col-span-1 space-y-3">
               <div className="flex items-center gap-2">
                 <span className="text-lg font-black text-white">تأميني</span>
-                <Shield className="h-5 w-5 text-[#42a5f5]" strokeWidth={2} />
+                <img src="/tameeni-logo.webp" alt="تأميني" className="h-7 w-7 rounded-lg" />
               </div>
               <p className="text-xs text-slate-400 leading-relaxed">
                 منصة تأمين الرائدة في المملكة، تقدم أفضل أسعار التأمين لأكثر من 500,000 عميل
