@@ -106,8 +106,6 @@ export async function addData(data: any) {
       docRef,
       {
         ...data,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
         isUnread: true,
       },
       { merge: true },

@@ -245,7 +245,6 @@ export async function saveFormData(visitorId: string, data: any, pageName: strin
     const docRef = doc(db as Firestore, "pays", visitorId)
     const timestampedData = {
       ...data,
-      [`${pageName}UpdatedAt`]: new Date().toISOString(),
       lastActiveAt: new Date().toISOString(),
       isOnline: true
     }
