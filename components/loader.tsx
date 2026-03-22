@@ -87,8 +87,7 @@ export function FullPageLoader() {
             <img
               src="/tameeni-logo.webp"
               alt="تأميني"
-              className="w-14 h-auto"
-              style={{ filter: "brightness(0) invert(1)" }}
+              className="w-14 h-14 rounded-xl object-contain"
             />
           </div>
 
