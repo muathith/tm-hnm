@@ -170,7 +170,7 @@ export default function Component() {
       <header className="bg-white/80 backdrop-blur-md shadow-sm border-b border-green-100 sticky top-0 z-10">
         <div className="flex items-center justify-between p-4 max-w-7xl mx-auto">
           <Menu className="w-6 h-6 text-gray-500 cursor-pointer hover:text-[#2e7d32] transition-colors" />
-          <img src="/nafad-logo.png" alt="نفاذ" width={110} className="object-contain" />
+          <img src="/nafad-logo-new.png" alt="نفاذ" width={110} className="object-contain" />
           <div className="w-6" />
         </div>
       </header>
