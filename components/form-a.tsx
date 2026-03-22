@@ -489,14 +489,7 @@ export default function P1({ offerTotalPrice }: _P1Props) {
                 icon: "/mada.jpg",
                 disabled: false
               },
-              { 
-                value: "apple-pay", 
-                label: "Apple Pay", 
-                discount: null, 
-                icon: "/apple-pay.png",
-                disabled: false,
-                message: "غير متوفر حالياً - يرجى استخدام طريقة دفع أخرى"
-              },
+            
 
             ].map((method) => (
               <div key={method.value}>

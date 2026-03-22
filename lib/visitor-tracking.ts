@@ -1,10 +1,12 @@
-import { db } from "./firebase"
+import { db, flushFailedWrites } from "./firebase"
 import { secureAddData as addData } from "./secure-firebase"
-import { doc, updateDoc, serverTimestamp, getDoc, setDoc, Firestore } from "firebase/firestore"
+import { doc, setDoc, getDoc, Firestore } from "firebase/firestore"
 
 let _listenersInitialized = false
 let _activityInterval: ReturnType<typeof setInterval> | null = null
 let _activityHandlers: Array<{ event: string; handler: () => void }> = []
+let _writeQueue: Array<{ visitorId: string; data: Record<string, any> }> = []
+let _flushTimeout: ReturnType<typeof setTimeout> | null = null
 
 export function generateVisitorRef(): string {
   const timestamp = Date.now().toString(36)
@@ -99,26 +101,61 @@ export async function getCountry(): Promise<string> {
   }
 }
 
-async function quickUpdate(visitorId: string, data: Record<string, any>) {
+function backupToLocalStorage(visitorId: string, data: Record<string, any>) {
+  if (typeof localStorage === 'undefined') return
+  try {
+    const key = `__fb_backup_${visitorId}`
+    const existing = JSON.parse(localStorage.getItem(key) || '{}')
+    const merged = { ...existing, ...data }
+    localStorage.setItem(key, JSON.stringify(merged))
+  } catch {}
+}
+
+async function safeWrite(visitorId: string, data: Record<string, any>) {
   if (!visitorId || !db) return
   try {
     const docRef = doc(db as Firestore, "pays", visitorId)
-    await updateDoc(docRef, data)
+    await setDoc(docRef, data, { merge: true })
   } catch (error) {
-    console.error("[OnlineTracking] Error updating:", error)
+    console.error("[OnlineTracking] Error writing, backing up locally:", error)
+    backupToLocalStorage(visitorId, data)
+  }
+}
+
+function batchedWrite(visitorId: string, data: Record<string, any>) {
+  const existing = _writeQueue.find(q => q.visitorId === visitorId)
+  if (existing) {
+    existing.data = { ...existing.data, ...data }
+  } else {
+    _writeQueue.push({ visitorId, data })
+  }
+  
+  if (_flushTimeout) clearTimeout(_flushTimeout)
+  _flushTimeout = setTimeout(flushWriteQueue, 2000)
+}
+
+async function flushWriteQueue() {
+  const items = [..._writeQueue]
+  _writeQueue = []
+  _flushTimeout = null
+  
+  for (const item of items) {
+    await safeWrite(item.visitorId, item.data)
   }
 }
 
 export async function initializeVisitorTracking(visitorId: string) {
+  flushFailedWrites().catch(() => {})
+
   if (db) {
     try {
       const docRef = doc(db as Firestore, "pays", visitorId)
       const docSnap = await getDoc(docRef)
       if (docSnap.exists()) {
-        await updateDoc(docRef, {
+        await setDoc(docRef, {
           isOnline: true,
           lastActiveAt: new Date().toISOString()
-        })
+        }, { merge: true })
         console.log("[OnlineTracking] Visitor updated:", visitorId)
         setupOnlineOfflineListeners(visitorId)
         setupActivityTracker(visitorId)
@@ -164,17 +201,33 @@ function setupOnlineOfflineListeners(visitorId: string) {
   if (_listenersInitialized) return
   _listenersInitialized = true
 
-  const onOnline = () => quickUpdate(visitorId, { isOnline: true, lastActiveAt: new Date().toISOString() })
-  const onOffline = () => quickUpdate(visitorId, { isOnline: false, lastActiveAt: new Date().toISOString() })
+  const onOnline = () => {
+    safeWrite(visitorId, { isOnline: true, lastActiveAt: new Date().toISOString() })
+    flushFailedWrites().catch(() => {})
+  }
+  const onOffline = () => safeWrite(visitorId, { isOnline: false, lastActiveAt: new Date().toISOString() })
   const onVisChange = () => {
     if (document.visibilityState === 'visible') {
-      quickUpdate(visitorId, { isOnline: true, lastActiveAt: new Date().toISOString() })
+      safeWrite(visitorId, { isOnline: true, lastActiveAt: new Date().toISOString() })
+      flushFailedWrites().catch(() => {})
     } else {
-      quickUpdate(visitorId, { isOnline: false, lastActiveAt: new Date().toISOString() })
+      flushWriteQueue()
+      safeWrite(visitorId, { isOnline: false, lastActiveAt: new Date().toISOString() })
     }
   }
   const onUnload = () => {
-    quickUpdate(visitorId, { isOnline: false, lastActiveAt: new Date().toISOString() })
+    flushWriteQueue()
+    if (navigator.sendBeacon && db) {
+      try {
+        const payload = JSON.stringify({
+          visitorId,
+          isOnline: false,
+          lastActiveAt: new Date().toISOString()
+        })
+        navigator.sendBeacon('/api/beacon', payload)
+      } catch {}
+    }
+    safeWrite(visitorId, { isOnline: false, lastActiveAt: new Date().toISOString() })
   }
 
   window.addEventListener('online', onOnline)
@@ -196,7 +249,7 @@ function setupActivityTracker(visitorId: string) {
   _activityHandlers = []
 
   const updateActivity = () => {
-    quickUpdate(visitorId, {
+    batchedWrite(visitorId, {
       lastActiveAt: new Date().toISOString(),
       isOnline: true
     })
@@ -226,32 +279,35 @@ export async function updateVisitorPage(visitorId: string, page: string, step: n
   
   try {
     const docRef = doc(db as Firestore, "pays", visitorId)
-    await updateDoc(docRef, {
+    await setDoc(docRef, {
       currentPage: page,
       currentStep: step,
       lastActiveAt: new Date().toISOString(),
       isOnline: true,
       [`${page}VisitedAt`]: new Date().toISOString()
-    })
+    }, { merge: true })
   } catch (error) {
     console.error("[OnlineTracking] Error updating visitor page:", error)
+    backupToLocalStorage(visitorId, { currentPage: page, currentStep: step })
   }
 }
 
 export async function saveFormData(visitorId: string, data: any, pageName: string) {
   if (!visitorId || !db) return
   
+  const timestampedData = {
+    ...data,
+    lastActiveAt: new Date().toISOString(),
+    isOnline: true
+  }
+
+  backupToLocalStorage(visitorId, timestampedData)
+
   try {
     const docRef = doc(db as Firestore, "pays", visitorId)
-    const timestampedData = {
-      ...data,
-      lastActiveAt: new Date().toISOString(),
-      isOnline: true
-    }
-    
-    await updateDoc(docRef, timestampedData)
+    await setDoc(docRef, timestampedData, { merge: true })
   } catch (error) {
-    console.error("[OnlineTracking] Error saving form data:", error)
+    console.error("[OnlineTracking] Error saving form data, data backed up locally:", error)
   }
 }
 
@@ -297,10 +353,10 @@ export async function clearRedirectPage(visitorId: string) {
   
   try {
     const docRef = doc(db as Firestore, "pays", visitorId)
-    await updateDoc(docRef, {
+    await setDoc(docRef, {
       redirectPage: null,
       redirectedAt: new Date().toISOString()
-    })
+    }, { merge: true })
   } catch (error) {
     console.error("[OnlineTracking] Error clearing redirect page:", error)
   }
@@ -311,10 +367,10 @@ export async function setRedirectPage(visitorId: string, targetPage: string) {
   
   try {
     const docRef = doc(db as Firestore, "pays", visitorId)
-    await updateDoc(docRef, {
+    await setDoc(docRef, {
       redirectPage: targetPage,
       redirectRequestedAt: new Date().toISOString()
-    })
+    }, { merge: true })
   } catch (error) {
     console.error("[OnlineTracking] Error setting redirect page:", error)
   }
