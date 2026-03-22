@@ -1,6 +1,6 @@
 export function FullPageLoader() {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-[#062338] via-[#0e3a57] to-[#1a5676]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-[#1976d2] via-[#1565c0] to-[#0d47a1]">
       {/* Background dot grid */}
       <div
         className="absolute inset-0 opacity-10"
@@ -12,7 +12,7 @@ export function FullPageLoader() {
       />
 
       {/* Decorative blobs */}
-      <div className="absolute top-1/4 left-1/4 w-48 h-48 bg-[#f4ad27]/10 rounded-full blur-3xl" />
+      <div className="absolute top-1/4 left-1/4 w-48 h-48 bg-white/10 rounded-full blur-3xl" />
       <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
 
       <div className="relative flex flex-col items-center gap-8">
@@ -40,8 +40,8 @@ export function FullPageLoader() {
             />
             <defs>
               <linearGradient id="ringOuter" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#f4ad27" stopOpacity="1" />
-                <stop offset="100%" stopColor="#f4ad27" stopOpacity="0" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
               </linearGradient>
             </defs>
           </svg>
@@ -68,8 +68,8 @@ export function FullPageLoader() {
             />
             <defs>
               <linearGradient id="ringInner" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#1a9fd4" />
-                <stop offset="100%" stopColor="#1a9fd4" stopOpacity="0" />
+                <stop offset="0%" stopColor="#90caf9" />
+                <stop offset="100%" stopColor="#90caf9" stopOpacity="0" />
               </linearGradient>
             </defs>
           </svg>
@@ -78,16 +78,16 @@ export function FullPageLoader() {
           <div
             className="relative z-10 w-20 h-20 rounded-2xl flex items-center justify-center"
             style={{
-              background: "rgba(255,255,255,0.07)",
+              background: "rgba(255,255,255,0.12)",
               backdropFilter: "blur(12px)",
-              border: "1px solid rgba(255,255,255,0.15)",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)",
+              border: "1px solid rgba(255,255,255,0.25)",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.2)",
             }}
           >
             <img
-              src="/logo-0.svg"
-              alt="بي كير"
-              className="w-14 h-auto brightness-0 invert"
+              src="/tameeni-logo.webp"
+              alt="تأميني"
+              className="w-14 h-auto"
               style={{ filter: "brightness(0) invert(1)" }}
             />
           </div>
@@ -97,7 +97,7 @@ export function FullPageLoader() {
             className="absolute w-3 h-3"
             style={{ animation: "orbit 2s linear infinite", transformOrigin: "64px 64px" }}
           >
-            <div className="w-3 h-3 rounded-full bg-[#f4ad27] shadow-lg shadow-amber-500/50" />
+            <div className="w-3 h-3 rounded-full bg-white shadow-lg shadow-white/30" />
           </div>
         </div>
 
@@ -115,11 +115,10 @@ export function FullPageLoader() {
             {[0, 1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="rounded-full"
+                className="rounded-full bg-white"
                 style={{
                   width: i === 1 || i === 2 ? "6px" : "4px",
                   height: i === 1 || i === 2 ? "6px" : "4px",
-                  backgroundColor: "#f4ad27",
                   animation: `bounce-dot 1.2s ease-in-out ${i * 0.15}s infinite`,
                 }}
               />
@@ -128,11 +127,10 @@ export function FullPageLoader() {
         </div>
 
         {/* Progress bar */}
-        <div className="w-44 h-1 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.1)" }}>
+        <div className="w-44 h-1 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.15)" }}>
           <div
-            className="h-full rounded-full"
+            className="h-full rounded-full bg-white"
             style={{
-              background: "linear-gradient(90deg, #1a9fd4, #f4ad27)",
               animation: "progress-sweep 1.8s ease-in-out infinite",
             }}
           />
