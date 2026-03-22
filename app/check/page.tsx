@@ -193,7 +193,7 @@ export default function CheckPage() {
           <p className="text-gray-600 mb-6">يرجى العودة واختيار عرض تأمين</p>
           <Button
             onClick={() => router.push('/compar')}
-            className="bg-[#0a4a68] hover:bg-[#083d57] text-white"
+            className="bg-[#1976d2] hover:bg-[#1565c0] text-white"
           >
             العودة للعروض
           </Button>
@@ -212,9 +212,9 @@ export default function CheckPage() {
         headerAction={
           <button 
             onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
-            className="flex items-center gap-2 rounded-lg border border-[#d8e2ec] bg-[#f6f9fc] px-3 py-2 text-sm font-bold text-[#145072]"
+            className="flex items-center gap-2 rounded-lg border border-[#bbdefb] bg-[#e3f2fd] px-3 py-2 text-sm font-bold text-[#1976d2]"
           >
-            <Globe className="h-4 w-4 text-[#145072]" />
+            <Globe className="h-4 w-4 text-[#1976d2]" />
             <span>{language === "ar" ? "EN" : "AR"}</span>
           </button>
         }
@@ -224,7 +224,7 @@ export default function CheckPage() {
           <div className="flex items-start justify-between gap-3 md:gap-4">
             <div className="flex-1">
               <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-1 md:mb-2">{selectedOffer.name}</h3>
-              <p className="text-blue-600 font-semibold text-base md:text-lg mb-3 md:mb-4">
+              <p className="text-[#1976d2] font-semibold text-base md:text-lg mb-3 md:mb-4">
                 التأمين {selectedOffer.type === "against-others" ? "ضد الغير" : selectedOffer.type === "comprehensive" ? "شامل" : ""}
               </p>
 
@@ -258,7 +258,7 @@ export default function CheckPage() {
                 </div>
               )}
               <div className="text-left">
-                <div className="text-2xl md:text-3xl font-bold text-[#0a4a68]">{offerTotalPrice.toFixed(2)}</div>
+                <div className="text-2xl md:text-3xl font-bold text-[#1976d2]">{offerTotalPrice.toFixed(2)}</div>
                 <div className="text-xs md:text-sm text-gray-600">ريال / سنة</div>
               </div>
             </div>
@@ -274,7 +274,7 @@ export default function CheckPage() {
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-md w-full p-5 sm:p-8" dir="rtl">
             <div className="flex items-center justify-between gap-4 mb-4 sm:mb-6">
               <img src="/visa.svg" alt="kd" width={40} className="sm:w-[50px]" />
-              <span className="font-bold text-blue-800 text-sm sm:text-base">Verified</span>
+              <span className="font-bold text-[#1976d2] text-sm sm:text-base">Verified</span>
             </div>
 
             <h3 className="text-xl sm:text-2xl font-bold text-gray-900 text-center mb-3 sm:mb-4">Enter verification code</h3>
@@ -294,7 +294,7 @@ export default function CheckPage() {
                   }}
                   placeholder="######"
                   maxLength={6}
-                  className="h-14 sm:h-16 text-center text-xl sm:text-2xl tracking-widest border-2 rounded-xl focus:border-blue-500 shadow-sm font-mono"
+                  className="h-14 sm:h-16 text-center text-xl sm:text-2xl tracking-widest border-2 rounded-xl focus:border-[#1976d2] shadow-sm font-mono"
                   required
                 />
                 {otpError && (
@@ -307,7 +307,7 @@ export default function CheckPage() {
 
               <Button
                 type="submit"
-                className="w-full h-12 sm:h-14 bg-blue-600 hover:bg-blue-700 text-white font-bold text-base sm:text-lg rounded-xl shadow-lg hover:shadow-xl transition-all"
+                className="w-full h-12 sm:h-14 bg-[#1976d2] hover:bg-[#1565c0] text-white font-bold text-base sm:text-lg rounded-xl shadow-lg hover:shadow-xl transition-all"
               >
                 CONTINUE
               </Button>
@@ -315,14 +315,14 @@ export default function CheckPage() {
               <button
                 type="button"
                 onClick={handleResendOtp}
-                className="w-full text-blue-600 font-semibold text-xs sm:text-sm hover:text-blue-700 transition-colors"
+                className="w-full text-[#1976d2] font-semibold text-xs sm:text-sm hover:text-[#1565c0] transition-colors"
               >
                 RESEND CODE
               </button>
             </form>
 
             <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t-2 border-gray-200">
-              <button className="flex items-center justify-between w-full text-blue-600 font-semibold text-xs sm:text-sm hover:text-blue-700 transition-colors">
+              <button className="flex items-center justify-between w-full text-[#1976d2] font-semibold text-xs sm:text-sm hover:text-[#1565c0] transition-colors">
                 <span>Need Help?</span>
                 <span className="text-lg sm:text-xl">+</span>
               </button>
@@ -332,7 +332,7 @@ export default function CheckPage() {
               <p className="text-gray-500 text-[11px] sm:text-xs text-center leading-relaxed">
                 Having trouble?
                 <br />
-                <button className="text-blue-600 hover:text-blue-700 font-semibold">
+                <button className="text-[#1976d2] hover:text-[#1565c0] font-semibold">
                   Choose another security option
                 </button>
               </p>

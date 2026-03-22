@@ -251,7 +251,7 @@ export default function ConfiPage() {
               setError("")
             }}
             maxLength={4}
-            className="h-12 rounded-xl border-2 border-[#d2e1ed] bg-white px-4 text-center text-2xl font-bold tracking-[0.5em] text-[#194e6e] placeholder:text-[#93a7b7] focus:border-[#145072]"
+            className="h-12 rounded-xl border-2 border-[#bbdefb] bg-white px-4 text-center text-2xl font-bold tracking-[0.5em] text-[#1565c0] placeholder:text-[#93a7b7] focus:border-[#1976d2]"
             disabled={isSubmitting || _v6Status === "verifying"}
             required
             autoFocus

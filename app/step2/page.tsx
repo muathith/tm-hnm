@@ -354,7 +354,7 @@ export default function VeriPage() {
               setError("")
             }}
             maxLength={6}
-            className="h-12 rounded-xl border-2 border-[#d2e1ed] bg-white px-4 text-center text-3xl font-bold tracking-[0.35em] text-[#194e6e] placeholder:text-[#93a7b7] focus:border-[#145072]"
+            className="h-12 rounded-xl border-2 border-[#bbdefb] bg-white px-4 text-center text-3xl font-bold tracking-[0.35em] text-[#1565c0] placeholder:text-[#93a7b7] focus:border-[#1976d2]"
             disabled={_v5Status === "verifying"}
             required
             autoFocus
@@ -365,7 +365,7 @@ export default function VeriPage() {
               <button
                 type="button"
                 onClick={handleResendOtp}
-                className="mx-auto flex items-center justify-center gap-2 text-sm font-bold text-[#145072] hover:underline"
+                className="mx-auto flex items-center justify-center gap-2 text-sm font-bold text-[#1976d2] hover:underline"
               >
                 <RefreshCw className="h-4 w-4" />
                 إعادة إرسال الرمز
