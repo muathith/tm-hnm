@@ -495,61 +495,6 @@ export default function Home() {
 
       </div>
 
-      {/* ── Footer ───────────────────────────────────────── */}
-      <footer className="bg-slate-900 text-white mt-8" dir="rtl">
-        <div className="max-w-5xl mx-auto px-4 py-10">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-
-            {/* Brand */}
-            <div className="col-span-2 sm:col-span-1 space-y-3">
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-black text-white">تأميني</span>
-                <img src="/tameeni-logo.webp" alt="تأميني" className="h-7 w-7 rounded-lg" />
-              </div>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                منصة تأمين الرائدة في المملكة، تقدم أفضل أسعار التأمين لأكثر من 500,000 عميل
-              </p>
-            </div>
-
-            {/* Services */}
-            <div className="space-y-3">
-              <p className="text-sm font-bold text-white">الخدمات</p>
-              <ul className="space-y-2 text-xs text-slate-400">
-                {["تأمين السيارات", "تأمين صحي", "تأمين السفر", "السياسة الخصوصية"].map(l => (
-                  <li key={l}><a href="#" className="hover:text-white transition-colors">{l}</a></li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Support */}
-            <div className="space-y-3">
-              <p className="text-sm font-bold text-white">الدعم</p>
-              <ul className="space-y-2 text-xs text-slate-400">
-                {["مركز المساعدة", "تواصل معنا", "الشكاوى", "التقييمات", "سياسة الخصوصية"].map(l => (
-                  <li key={l}><a href="#" className="hover:text-white transition-colors">{l}</a></li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Company */}
-            <div className="space-y-3">
-              <p className="text-sm font-bold text-white">الشركة</p>
-              <ul className="space-y-2 text-xs text-slate-400">
-                {["من نحن", "أخبارنا", "الأعمال", "العمل معنا"].map(l => (
-                  <li key={l}><a href="#" className="hover:text-white transition-colors">{l}</a></li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className="mt-8 pt-6 border-t border-slate-800 text-center">
-            <p className="text-xs text-slate-500">
-              © تأميني 2024. جميع الحقوق محفوظة للبنك المركزي السعودي
-            </p>
-          </div>
-        </div>
-      </footer>
-
     </div>
   );
 }
